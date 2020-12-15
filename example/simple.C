@@ -6,15 +6,13 @@ void simple(){
 	chain.Add('./skim2_005339_first1000.hipo');
 	chain.Add('./skim2_005343_first1000.hipo');
 
-	// Loop on files
 
-	for(int ifile=0;ifile<chain.GetNFiles();++ifile){
+	auto config_c12=chain.GetC12Reader(); //in case you want to configure, use this
+  	auto& c12=chain.C12ref();
+  	while(chain.Next()==true){
 
-		clas12reader c12{chain.GetFileName(ifile).Data()};
-
-		auto parts=c12.getDetParticles();
-
-		std::cout << parts.size() << std::endl;
+	    auto particles = c12->getDetParticles();
+    	std::cout << particles.size() << std::endl;
 	}
 
 }
