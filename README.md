@@ -1,6 +1,8 @@
 # LTCCefficiency
 
-Code to perform energy calibration of the LTCC CLAS12 detector
+Code to perform energy calibration of the LTCC CLAS12 detector.
+
+Instruction, guide, how-tos, ... 
 
 #### Miscell.
 
