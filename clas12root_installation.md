@@ -1,8 +1,10 @@
-# My installation
+# Clas12root installation
 
-Valerio, Dec. 16 2020
+#### Valerio, Dec. 16 2020
 
-Read instruction on the official repo https://github.com/JeffersonLab/clas12root
+Before, read the instructions on the official repo https://github.com/JeffersonLab/clas12root.
+
+Then, this works for me
 
 ``` bash
 git clone --recurse-submodules https://github.com/jeffersonlab/clas12root.git
