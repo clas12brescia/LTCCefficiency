@@ -1,6 +1,6 @@
 # Examples
 
-Very simple macros for clas12root
+Very very simple macros for clas12root
 
 ### simple.C
 
