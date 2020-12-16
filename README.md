@@ -6,6 +6,6 @@ Instruction, guide, how-tos, ...
 
 #### Miscell.
 
-[Passwordless git access](https://github.com/clas12brescia/LTCCefficiency/blob/main/passwordless-git.md)
+[Passwordless git access](https://github.com/clas12brescia/LTCCefficiency/blob/main/misc/passwordless-git.md)
 
-[clas12root installation](https://github.com/clas12brescia/LTCCefficiency/blob/main/clas12root_installation.md)
+[clas12root installation](https://github.com/clas12brescia/LTCCefficiency/blob/main/misc/clas12root_installation.md)
