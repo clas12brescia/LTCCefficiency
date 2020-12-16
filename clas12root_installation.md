@@ -4,7 +4,7 @@
 
 Before, read the instructions on the official repo https://github.com/JeffersonLab/clas12root.
 
-Then, this works for me
+Then, this works for me (copied from the install script in the repo but removing the first 2 lines about hipo files copying)
 
 ``` bash
 git clone --recurse-submodules https://github.com/jeffersonlab/clas12root.git
