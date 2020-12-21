@@ -24,7 +24,7 @@ root[1] multip->Draw()
 
 ### simple3.C
 
-Open a file and save momentum and angular (phi and theta) distributions in three histograms into a `out_simple3.root` file.
+Open a file and save momentum and angular -phi and theta- distributions (selecting only electrons) in three histograms into a `out_simple3.root` file.
 Run with:
 ```bash
 clas12root -b -q simple3.C
