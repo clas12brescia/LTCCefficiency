@@ -6,7 +6,7 @@
    ssh-keygen -t rsa
    ```
 
-2. Go to you Github [profile settings](https://github.com/settings/profile) > [SSH-GPG keys](https://github.com/settings/keys) and add the key
+2. Go to you Github [profile settings](https://github.com/settings/profile) > [SSH-GPG keys](https://github.com/settings/keys) and add the public key
 
 3. On your local machine, in the repository directory
    
