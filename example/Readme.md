@@ -21,3 +21,25 @@ root[1] multip->Draw()
 ```
 
 ![](./multip.png)
+
+### simple3.C
+
+Open a file and save momentum and angular (phi and theta) distributions in three histograms into a `out_simple3.root` file.
+Run with:
+```bash
+clas12root -b -q simple3.C
+```
+Then the histrograms can be found in the ROOT file:
+```bash
+root -l out_simple3.root
+root [1] mom->Draw()
+```
+![](./momentum.png)
+```bash
+root[2] phi->Draw()
+```
+![](./phi.png)
+```bash
+root[3] theta->Draw()
+```
+![](./theta.png)
