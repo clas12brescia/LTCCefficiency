@@ -43,3 +43,33 @@ root[2] phi->Draw()
 root[3] theta->Draw()
 ```
 ![](./theta.png)
+
+### simple4.C
+
+Open two hipo file (using HipoChain) and save histograms of some distributions.
+Electrons must be in the FT region and a constraint on the difference of time between these and photons is applied.
+
+Run with:
+```bash
+clas12root -b -q simple4.C
+```
+Then the histograms can be found in the ROOT file `out_simple4.root`:
+```bash
+root -l out_simple4.root
+root[1] pxy->Draw()
+```
+![](./px_py.png)
+```bash
+root[2] q2_histo->Draw()
+```
+![](./q2_histo.png)
+```bash
+root[3] qt2_histo->Draw()
+```
+![](./qt2_histo.png)
+```bash
+root[4] t->Draw()
+```
+![](./delta_time.png)
+
+Histograms in `q2_histo.png` and `qt2_histo.png` files are setted in Log scale with the ROOT graphical editor. 
