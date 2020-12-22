@@ -48,6 +48,11 @@ root[3] theta->Draw()
 
 Open two hipo file (using HipoChain) and save histograms of some distributions.
 Electrons must be in the FT region and a constraint on the difference of time between these and photons is applied.
+The distributions are the following:
+* Scatter plot of transverse component of momentum p (p<sub>x</sub> and p<sub>y</sub>) of electrons;
+* Transferred 4-momentum squared (q<sup>2</sup>);
+* Transverse transferred 4-momentum squared (q<sub>x</sub><sup>2</sup>+q<sub>y</sub><sup>2</sup>);
+* Difference between electrons and photons time (t<sub>e</sub> - t<sub>ph</sub>).
 
 Run with:
 ```bash
