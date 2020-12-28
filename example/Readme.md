@@ -105,7 +105,7 @@ root -l out_simple5.root
 
 To draw the canvas with the two 1D-histograms:
 ```bash
-root[1] c_hfit->Draw
+root[1] c_hfit->Draw()
 ```
 
 ![](./pi0mass_gammatime.png)
