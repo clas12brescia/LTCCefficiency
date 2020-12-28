@@ -87,9 +87,9 @@ Events are selected so that:
 * there are two photons.
 
 The distributions calculated in the macro are the following:
-* the pi0 mass, from the sum of photons 4-momenta;
-* the delta time of the two gammas;
-* the scatter plot between delta times of electron and photons.
+* the &pi;<sub>0</sub> mass, from the sum of photons 4-momenta;
+* the &Delta;t of the two gammas;
+* the scatter plot between &Delta;ts of electron and photons.
 
 The first two histograms are in a single canvas. In these 1D-histograms fits with a gaussian (for mass) and a Cauchy-Lorentz distribution (for time) are done.
 The parameters for both are saved in a txt file. 
@@ -121,7 +121,3 @@ To see the parameters of the fitting functions and their names, open the file `f
 In the figure below, the content of the txt file.
 
 ![](./fit_par_file.png) 
-
-### LaTeX symbols (tests)
-
-&pi ;pi \\pi $pi$ $$pi$$ &pi; &#960; 
