@@ -117,7 +117,7 @@ root[2] h_time2->Draw()
 
 ![](./time_egamma_2d.png)
 
-To see the parameters of the fitting functions and their name, open the file `fit_par.txt` in a text editor. 
+To see the parameters of the fitting functions and their names, open the file `fit_par.txt` in a text editor. 
 In the figure below, the content of the txt file.
 
 ![](./fit_par_file.png) 
