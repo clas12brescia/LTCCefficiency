@@ -125,3 +125,5 @@ In the figure below, the content of the txt file.
 ### LaTeX symbols (tests)
 
 &pi ;pi \\pi $pi$ $$pi$$ 
+
+<img src="https://i.upmath.me/svg/E_0%3Dmc%5E2" alt="\pi" />
