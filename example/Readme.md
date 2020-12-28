@@ -122,3 +122,6 @@ In the figure below, the content of the txt file.
 
 ![](./fit_par_file.png) 
 
+### LaTeX symbols (tests)
+
+&pi ;pi \\pi $pi$ $$pi$$ 
