@@ -87,8 +87,8 @@ Events are selected so that:
 * there are two photons.
 
 The distributions calculated in the macro are the following:
-* the ;pi$_0$ mass, from the sum of photons 4-momenta;
-* the $\\Delta$t of the two gammas;
+* the \\pi<sub>0</sub> mass, from the sum of photons 4-momenta;
+* the \\Deltat of the two gammas;
 * the scatter plot between $Delta$ts of electron and photons.
 
 The first two histograms are in a single canvas. In these 1D-histograms fits with a gaussian (for mass) and a Cauchy-Lorentz distribution (for time) are done.
