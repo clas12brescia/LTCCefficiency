@@ -87,7 +87,7 @@ Events are selected so that:
 * there are two photons.
 
 The distributions calculated in the macro are the following:
-* the &pi;<sub>0</sub> mass, from the sum of photons 4-momenta;
+* the &pi;<sup>0</sup> mass, from the sum of photons 4-momenta;
 * the &Delta;t of the two gammas;
 * the scatter plot between &Delta;ts of electron and photons.
 
@@ -121,3 +121,33 @@ To see the parameters of the fitting functions and their names, open the file `f
 In the figure below, the content of the txt file.
 
 ![](./fit_par_file.png) 
+
+### simple6.C
+
+Open a list of hipo file (.dat or .txt), given as input in terminal, and save some histograms in a ROOT file.
+The code select events with exactly one electron, one proton and at least one &pi;<sup>+</sup> and one &pi;<sup>-</sup>.
+The histograms are the following:
+* **h_time**: distribution of the difference of time between the two pions;
+* **c_Nphe**: two 1D-histograms with the distributions of number of photoelectrons of &pi;<sup>+</sup> and &pi;<sup>-</sup>;
+* **c_xy**: two 2D-histograms with positions (x,y) of &pi;<sup>+</sup> and &pi;<sup>-</sup> and a colour scale representing the number of photoelectrons.
+
+Run with:
+```bash
+clas12root -b -q simple6.C --in=name_of_input_list.dat (or .txt)
+```
+Then the histrograms can be found in the ROOT file `out_simple6.root`
+```bash
+root -l out_simple6.root
+root[1] h_time->Draw()
+```
+![](./s6_time.png)
+```bash
+root[2] c_Nphe->Draw()
+```
+![](./s6_nphe.png)
+```bash
+root[3] c_xy->Draw()
+```
+![](./s6_xy.png)
+
+Some editing has been done with the ROOT graphical editor. 
