@@ -226,8 +226,8 @@ public:
 };
 
 // methods to read hipo files
-#include "readfiles1.cxx"
-int readfiles1(TChain *chain);
+#include "readfilesV.cxx"
+int readfilesV(TChain *chain);
 
 //uses 2 identified tracks, electron and pion (using PID)
 int testV_pion(){
