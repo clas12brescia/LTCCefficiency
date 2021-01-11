@@ -29,7 +29,7 @@ These cuts are:
 
 * cut on missing mass (between 0.88 and 1 GeV), so that is near the neutron mass (~0.94 GeV);
 * cut on the ratio between transverse momentum and transferred momentum on z (beam energy - p<sub>z</sub>): p<sub>t</sub>/q<sub>z</sub> < 0.12;
-* exclude electrons in sectors 3 and 5 and "heavy" partciles (proton, neutron, deuton) using PID identification.
+* exclude electrons in sectors 3 and 5 and "heavy" particles (proton, neutron, deuton) using PID identification.
 
 Run with:
 ```bash
