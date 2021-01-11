@@ -117,6 +117,22 @@ root[6] histo9b->Draw()
 
 ![Charge of selected particle after missing mass cut](./fig/charge_cut.png)
 
+### viewHistos
+
+This ROOT macro provides a rapid method to view and save all the histograms produced by the test7 macros.
+
+Run with:
+
+```bash
+root -l viewHistos.cxx
+```
+
+With this syntax, the pre-defined output are the histograms from `out_charged.root`. One can also specify which root file to use:
+
+```bash
+root -l 'viewHistos.cxx("out_pion.root")'
+```
+
 ## Note
 
 All the figures were obtained using these macros on a file list of about 500 hipo files.
@@ -128,6 +144,8 @@ Path of the files:
 `/cache/clas12/rg-a/production/recon/spring2019/torus-1/pass1/v0/dst/recon/006695`
 
 `/cache/clas12/rg-a/production/recon/spring2019/torus-1/pass1/v0/dst/recon/006710`
+
+The complete list of this paths for all the file used in these macros can be found in the dat file `input_spring2019.dat`.
 
 <!---
 #### Miscell.
