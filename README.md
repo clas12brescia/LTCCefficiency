@@ -41,7 +41,8 @@ root -l out_pion.root
 root[1] histo0->Draw()
 ```
 
-![Missing mass](./fig/missingmass_pion.png)
+![](./fig/missingmass_pion.png)
+*Missing mass*
 
 ```bash
 root[2] histo1->Draw()
