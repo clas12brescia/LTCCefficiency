@@ -121,7 +121,7 @@ root[6] histo9b->Draw()
 All the figures were obtained using these macros on a file list of about 500 hipo files.
 The hipo files used are from spring2019 run, directories 006616, 006695 and 006710. 
 
-# #### Miscell.
+# Miscell.
 
 # [Passwordless git access](https://github.com/clas12brescia/LTCCefficiency/blob/main/misc/passwordless-git.md)
 
