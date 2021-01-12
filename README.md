@@ -43,6 +43,11 @@ The selected particles are charged particles with intermediate mass (e.g. pions,
 
 ## How to run the macro
 
+Clone the repository with:
+```bash
+git clone https://github.com/clas12brescia/LTCCefficiency.git
+cd LTCCefficiency
+```
 Run with:
 ```bash
 clas12root LTCCefficiency.cxx --in=input_filename.dat   
