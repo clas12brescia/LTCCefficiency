@@ -28,7 +28,7 @@ Pions in this macro are identified **without** the use of PID (=211).
 Instead, they are selected using the following requests:
 
 1. events with no more than one or two charged tracks are selected;
-1. one of this tracks must be an electron;
+1. one of these tracks must be an electron;
 1. the electron must not be in the active LTCC region (sectors 3 and 5);
 1. no "heavy" particles (deuton, proton or heavier baryons) are admitted in the active region.
 
