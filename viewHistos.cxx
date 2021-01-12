@@ -2,7 +2,7 @@
 	Show the histos from the LTTCefficiecy analysys
 */
 
-void viewHistos(string inFile = "out_charged.root") {
+void viewHistos(string inFile = "out_LTCCefficiency.root") {
 
 	// Retrieve the histos from the root file
 
