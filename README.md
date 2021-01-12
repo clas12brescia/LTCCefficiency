@@ -2,6 +2,12 @@
 
 Code to analyze the efficiency of the LTCC CLAS12 detector.
 
+The **clas12root** library is needed. For a local installation see [clas12root installation](https://github.com/clas12brescia/LTCCefficiency/blob/main/misc/clas12root_installation.md), for an ifarm machine at JLab with bash:
+```bash
+source /group/clas12/packages/setup.sh && module load clas12
+```
+
+
 ## What this macro does?
 
 LTCCefficiency.cxx is a clas12root macro to calculate the efficiency of the LTCC CLAS12 detector for charged candidate with intermediate mass.
