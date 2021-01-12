@@ -48,7 +48,7 @@ ls -1 /directory/of/hipo/files/*.hipo > input_filename.dat
 that put the paths of all hipo files present in the directory.
 
 
-After the run finished, the histograms can be found in the root file `out_LTCCefficiency.root`.
+After the run finish, the histograms can be found in the root file `out_LTCCefficiency.root`.
 To see the main histograms of the analysis, run the ROOT macro `viewHistos.cxx` with:
 
 ```bash
