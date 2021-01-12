@@ -23,10 +23,10 @@ public:
 
 This creates a list of "Filtered_Particle" objects associated to one evenet.
 Care: Since the class contains a pointer to the general clas12reader that is given at construction stage, the functions of this class do not need to receive information on each event.
-The function `<SetPList()>` automatically clears the old list and fills a new one.
+The function `SetPList()` automatically clears the old list and fills a new one.
 Care: This function contains some filtering criteria, that is it discard some particles. 
 These can be modified to satisfy further requirements.
-Care: The energy of each particle is calculated as P/beta using the clas12root functions `<parts[i]->getBeta()>` and `<parts[i]->getP()>`. 
+Care: The energy of each particle is calculated as P/beta using the clas12root functions `parts[i]->getBeta()` and `parts[i]->getP()`. 
 PIDs are not used. Of course users could prefer different methods.
 
 ```c++
@@ -61,17 +61,17 @@ public:
 ```
 ## Event_Global_Momenta
 
-This works on a "Filtered_Particle_List" object (previous class) and 
+This works on a `Filtered_Particle_List` object (previous class) and 
 calculates the components of some relevant kinematic variables that 
 do not belong to a single particle but to the whole event. At present, 
 the overall 4-momentum PF of all the final particles, and the missing 
 4-momentum MissingP = P_beam + P_target - P_final. 
-These can be retrieved via the functions `<getPF()>` and `<getMissingP()>` that 
+These can be retrieved via the functions `getPF()` and `getMissingP()` that 
 return a TLorentzVector.  
-Also `<getMissingMass()>` and `<getMissingEnergy()>` that directly return a double 
+Also `getMissingMass()` and `getMissingEnergy()` that directly return a double 
 are present. 
 At construction it only requires the target mass and the beam energy.
-At each event the function `<setEventMomenta(list<Filtered_Particle> lpf)>` 
+At each event the function `setEventMomenta(list<Filtered_Particle> lpf)` 
 receives as argument an object of those built by the previous class,
 and extracts from it the information to build the event variables. 
 Care: check how the previous class reconstructs the energy of each 
@@ -114,17 +114,17 @@ This is a "fragment of LTCCefficiency()" with two instructions that always appea
 together:
  
 1. Calculating the total final momentum + the missing momentum 
-of an event (`<setEventMomenta()>`), using
-1. a list that must have been already built by `<setPList()>`.
+of an event (`setEventMomenta()`), using
+1. a list that must have been already built by `setPList()`.
  
 Because of this "fragment" organized as a class, LTCCefficiency() never 
 directly sees the above defined classes. 
 In LTCCefficiency() the construction instruction is of the kind: 
-`<Filtered_Loop loop(&c12, E_beam, target_mass);>`
+`Filtered_Loop loop(&c12, E_beam, target_mass);`
 In the later event analysis in LTCCefficiency(), the instuction 
-`<loop.setLoop();>` 
+`loop.setLoop();` 
 builds a filtered particle list and calculates final momentum and missing momentum over this list. 
-These can be retrieved via the functions `<get...>` of the above class `<Event_Global_Momenta>` that are inherited by `<Filtered_Loop>`.
+These can be retrieved via the functions `get...` of the above class `Event_Global_Momenta` that are inherited by `Filtered_Loop`.
 
 ```c++
 class Filtered_Loop :
@@ -172,7 +172,7 @@ public:
 
 Cutffs that in clas12root can be imposed BEFORE beginning a loop 
 on the event particles, exploiting requirements like   
-`<c12.addAtLeastPid(11,1)>` that have been left in LTCCefficiency(). The 
+`c12.addAtLeastPid(11,1)` that have been left in LTCCefficiency(). The 
 standard sequence in LTCCefficiency() is:
 ```c++ 
 clas12reader c12(chain.GetListOfFiles()->At(ifile)->GetTitle(), {0}); //defines c12
@@ -182,10 +182,10 @@ c12.addAtLeastPid(11,1); //guarantees that an electron is present
 auto electron=c12->getByID(11)[0];
 ```
 
-The last instruction is the starting point of the function `<CutsOnElectron>` of this class. 
-The function `<CutsOnTestParticle>` is similar, but assumes that an 
+The last instruction is the starting point of the function `CutsOnElectron` of this class. 
+The function `CutsOnTestParticle` is similar, but assumes that an 
 additional identified particle (e.g. PID=211) has been guaranteed by an 
-instruction `<c12.addAtLeastPid(...)>` in LTCCefficiency(). This is the case in 
+instruction `c12.addAtLeastPid(...)` in LTCCefficiency(). This is the case in 
 some of our codes but not all. 
 Care: by default (LTCC) this class requires the electron to be in FD but 
 out of LTCC, while the possible additional test particle must be in. Modify 
@@ -241,7 +241,7 @@ public:
 This is for the case when the test particle (e.g. a &pi;<sup>+</sup>) is not chosen 
 on the basis of the PID identification by clas12root. This class is a 
 function that receives a clas12root object "particle" (more precisely 
-the type is `<region_part_ptr>`) and returns 0 if one of several 
+the type is `region_part_ptr`) and returns 0 if one of several 
 conditions on this particle is not true. Of course, these conditions 
 are frequently modified.  
 Remark: it does not handle the full particle vector, but ony one particle 
@@ -281,7 +281,7 @@ Since 4 specific histograms always appear in our codes on LTCC efficiency,
 we have regrouped all the operations concerning them in the functions of this class. 
 It creates 3 of them, and the last one that is the ratio of two of the previous ones. 
 The function Fill depends on an index to fill the required histogram.  
-`<Draw()>` collects all the printing isntructions in one. When use additional histograms apart for these 4, their creation etc 
+`Draw()` collects all the printing isntructions in one. When use additional histograms apart for these 4, their creation etc 
 appears explicitely in LTCCefficiency().
 
 ```c++
