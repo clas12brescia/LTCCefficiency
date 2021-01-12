@@ -20,3 +20,12 @@ cmake ../
 make install
 ```
 Then set the CLAS12ROOT, PATH and HIPO env variables in the `.bashrc` file!
+
+
+## Examples
+
+Besides the examples on the [clas12root github repo](https://github.com/JeffersonLab/clas12root), a set of elementary clas12root macros is available in a dedicated branch:
+```bash
+git checkout clas12root-examples
+cd example
+```
