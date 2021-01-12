@@ -48,19 +48,19 @@ root[1] histo0->Draw()
 root[2] histo1->Draw()
 ```
 
-![Pions candidates in the LTCC region](./fig/candidates_ltcc_pion.png)
+![Pions candidates in the LTCC region](../fig/candidates_ltcc_pion.png)
 
 ```bash
 root[3] histo2->Draw()
 ```
 
-![Candidates with hits in the LTCC active region](./fig/candidates_hits_pion.png)
+![Candidates with hits in the LTCC active region](../fig/candidates_hits_pion.png)
 
 ```bash
 root[4] hratio->Draw()
 ```
 
-![Efficiency of LTCC for pions (ratio between histo2 and histo1)](./fig/pi_ratio_pion.png)
+![Efficiency of LTCC for pions (ratio between histo2 and histo1)](../fig/pi_ratio_pion.png)
 
 ### test7_charged
 
@@ -85,37 +85,37 @@ root -l out_charged.root
 root[1] histo0->Draw()
 ```
 
-![Missing mass](./fig/missingmass_charged.png)
+![Missing mass](../fig/missingmass_charged.png)
 
 ```bash
 root[2] histo1->Draw()
 ```
 
-![Pions candidates in the LTCC region](./fig/candidates_ltcc_charged.png)
+![Pions candidates in the LTCC region](../fig/candidates_ltcc_charged.png)
 
 ```bash
 root[3] histo2->Draw()
 ```
 
-![Candidates hits in the LTCC active region](./fig/candidates_hits_charged.png)
+![Candidates hits in the LTCC active region](../fig/candidates_hits_charged.png)
 
 ```bash
 root[4] hratio->Draw()
 ```
 
-![Efficiency of LTCC for pions (ratio between histo2 and histo1](./fig/pi_ratio_charged.png)
+![Efficiency of LTCC for pions (ratio between histo2 and histo1](../fig/pi_ratio_charged.png)
 
 ```bash
 root[5] histo9->Draw()
 ```
 
-![Charge of selected particle (two charged track)](./fig/charge.png)
+![Charge of selected particle (two charged track)](../fig/charge.png)
 
 ```bash
 root[6] histo9b->Draw()
 ```
 
-![Charge of selected particle after missing mass cut](./fig/charge_cut.png)
+![Charge of selected particle after missing mass cut](../fig/charge_cut.png)
 
 ### viewHistos
 
