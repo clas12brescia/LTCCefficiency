@@ -41,7 +41,7 @@ root -l out_pion.root
 root[1] histo0->Draw()
 ```
 
-![Missing mass](./LTCCefficiency/fig/missingmass_pion.png)
+![Missing mass](LTCCefficiency/fig/missingmass_pion.png)
 
 
 ```bash
