@@ -1,6 +1,6 @@
 # Classes description
 
-Useful descriptions and comments about the classes used in the macro `LTCCefficiency.cxx`.
+Useful descriptions and comments about the classes used in the macro `LTCCefficiency.cxx` and `LTCCefficiency_PID.cxx`.
 
 ## Filtered_Particle
 
@@ -281,8 +281,9 @@ Since 4 specific histograms always appear in our codes on LTCC efficiency,
 we have regrouped all the operations concerning them in the functions of this class. 
 It creates 3 of them, and the last one that is the ratio of two of the previous ones. 
 The function Fill depends on an index to fill the required histogram.  
-`Draw()` collects all the printing isntructions in one. When use additional histograms apart for these 4, their creation etc 
+`Draw()` collects all the printing instructions in one. When use additional histograms apart for these 4, their creation etc 
 appears explicitely in LTCCefficiency().
+The histograms are also saved in a ROOT file. For this function, it is necessary to define a `TFile` pointer (in this case `TFile* out`) in LTCCefficiency(), and give it as an input to the method `Draw(TFile*)`. 
 
 ```c++
 class Histogram_Vector {
@@ -298,13 +299,14 @@ public:
     VT.push_back(h2);
   }
   int Fill(int i, double a){VT[i]->Fill(a); return 1;}
-  int Draw1(int i){
+  int Draw1(int i, TFile* out){
       TCanvas *can = new TCanvas;
       VT[i]->Draw();
+      VT[i]->Write();
       return 1;
   }  
-  int Draw(){
-    for (int i=0; i< VT.size(); i++) Draw1(i);
+  int Draw(TFile* out){
+    for (int i=0; i< VT.size(); i++) Draw1(i, out);
     return 1;
   }
   int SetRatio(int i, int j){
