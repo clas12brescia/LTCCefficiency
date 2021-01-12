@@ -1,7 +1,9 @@
 // Run with:
-// clas12root test7_pion.cxx
+// clas12root LTCCefficiency_PID.cxx
 // If readfiles1 method provide a text file reader using Argc, Argv:
-// clas12root test7_pion.cxx --in=input_filename.dat (or .txt)
+// clas12root LTCCefficiency_PID.cxx --in=input_filename.dat (or .txt)
+// For compilable versione, use "+" after ".cxx".
+// Histograms are saved in 'out_LTCCefficiency_PID.root' file.
 
 #include <iostream>
 #include <fstream>
@@ -225,80 +227,118 @@ public:
   }
 };
 
+//////////////////////////////////////////////////////////
+// For more detailed descriptions of the classes above  //
+// see 'classes_description.md'                         //
+//////////////////////////////////////////////////////////
+
+
 // methods to read hipo files
-#include "readfilesV.cxx"
-int readfilesV(TChain *chain);
+#include "readfiles.cxx"
+int readfiles(TChain *chain);
 
 //uses 2 identified tracks, electron and pion (using PID)
-int testV_pion(){
-
+int LTCCefficiency_PID(){
+	
+	// check starting time
   system("date");
 
-  bool short_run = 1;
+//  bool short_run = 1; //1 = few hipo files, 0 = all list (NOT implemented in the present readfiles method)
   double E_beam = 10.1998;
   double target_mass = 0.93872;
 
+	// PID of the second track
   int second_pid = 211;
 
+	// create a vector of useful histograms
   Histogram_Vector HV;
   
   //pre-load of hipo files
   TChain chain;
-  readfiles1(&chain);
+  readfiles(&chain);
   
+	// index of all processed events
   int ievent = 0;
   
   //loop over files
   for(int ifile=0; ifile<chain.GetListOfFiles()->GetEntries(); ++ifile){
 
     clas12reader c12(chain.GetListOfFiles()->At(ifile)->GetTitle(), {0});
-    Starting_Cutoffs cuts(&c12);
+    
+		// cuts on always present and identified particles 
+		// (e.g. leading electron)
+		Starting_Cutoffs cuts(&c12);
+
+		// reduced list of useful properties of particles
+		// Pindex, Px, Py, Pz, E
     Filtered_Loop loop(&c12, E_beam, target_mass);
+
+		// cuts on the overall event 4-momentum
+		// (e.g. missing mass)
     Filtered_Loop_Cutoffs loop_cuts;
     
-    c12.addExactPid(11,1);    //1 electron
-    c12.addExactPid(second_pid,1);    //1 positive pion
+    c12.addExactPid(11,1);    				//exactly 1 electron
+    c12.addExactPid(second_pid,1);    //exactly 1 positive pion
     
-    //ciclo sugli eventi 
+    // loop over events
     while(c12.next()==true){
 
       if(c12.getDetParticles().empty()) continue; //remove empty events
 
+			// application of cuts on the electron
       if ( cuts.CutsOnElectron() ) continue;
+			// select particle with PID=211 (pion+)
       if ( cuts.CutsOnTestParticle(second_pid) ) continue;
 
       //emergency cutoff for few-event analysis
       ievent++;
       //if (ievent > 60) break;  
 
-      loop.setLoop();
+      // initialization of the reduced list of particle properties
+			// determination of missing momentum and total final momentum
+			loop.setLoop();
       
-      double missing_mass = loop.getMissingMass();      
+			// calculate missing mass and fill the histogram
+      double missing_mass = loop.getMissingMass();
       HV.Fill(0,missing_mass);
 
-      if (loop_cuts.CutsOnMissingP(&loop)) continue; //cut on missing P mass etc 
+			// cuts on missing P variables:
+			// missing mass, missing energy > missing mass
+      if (loop_cuts.CutsOnMissingP(&loop)) continue; 
+			
+			// pointer to particles identified as pion+ (PID=211)
       auto ppp=c12.getByID(second_pid)[0];
 
+			// pointer to pion+ momentum
       double candidate_P = ppp->getP();
 
-      //before photoelectron check
+      // before photoelectron check
       HV.Fill(1,candidate_P); 
 
-      //number of photoelectrons in LTCC. Care: not an integer. 
+      // number of photoelectrons produced by the candidates in LTCC. 
+			// Care: not an integer. 
       double candidate_Nphe = ppp->che(LTCC)->getNphe();
 
-      //after photoelecton check
-      if (candidate_Nphe > 0.99)
-	HV.Fill(2,candidate_P);      
+      // require at least 1 photoelectron and fill histogram
+      if (candidate_Nphe > 0.99) HV.Fill(2,candidate_P);
 
     }//loop over events
   }// loop over files
-	TFile* out = new TFile("out_pion.root", "RECREATE");
 
-  //ratio of histograms
+	// root output file
+	TFile* out = new TFile("out_LTCCefficiency_PID.root", "RECREATE");
+
+  // set and create ratio of histograms 1 and 2 (efficiency)
+	// candidates in LTCC with photoelectrons / all candidates in LTCC
   HV.SetRatio(2,1);
+	
+	// draw and save the four histograms:
+	// missing mass, candidates, candidates with photoelectrons, ratio
   HV.Draw(out);
   
+	// close the root file
+	out->Close();
+
   system("date");
   return 0;
 }
