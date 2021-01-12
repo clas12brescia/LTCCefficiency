@@ -2,11 +2,19 @@
 
 Code to analyze the efficiency of the LTCC CLAS12 detector.
 
-## What this macro does?
+## test7
 
-LTCCefficiency.cxx is a clas12root macro to calculate the efficiency of the LTCC CLAS12 detector for pions.
+The code is divided in two different macros:
 
-## How does the macro work?
+* **test7_pion.cxx**: pions are identified using the Particle ID (PID=211).
+* **test7_charged.cxx**: pions are identified using an algorithm that take events with two charged tracks, one electron and another particle, and the electron is taken outside the active sectors of LTCC (sectors 3 and 5). Other constraints are applied.
+
+A method to read hipo files and add them to the HipoChain of clas12root is provided in the file `readfiles1.cxx`.
+At the present, only a text file reader for list of hipo file is implemented.
+
+More details can be found in the following sections.
+
+### test7_pion
 
 This macro reads a list of hipo files, draws and saves histograms of some distributions of pions' momentum with different constraints.
 These distributions are the following:
