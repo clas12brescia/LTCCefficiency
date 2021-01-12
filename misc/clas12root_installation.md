@@ -26,6 +26,7 @@ Then set the CLAS12ROOT, PATH and HIPO env variables in the `.bashrc` file!
 
 Besides the examples on the [clas12root github repo](https://github.com/JeffersonLab/clas12root), a set of elementary clas12root macros is available in a dedicated branch:
 ```bash
+git checkout --track origin/clas12root-examples # just once to activate the local tracking of the remote branch
 git checkout clas12root-examples
 cd example
 ```
