@@ -28,7 +28,7 @@ Cuts on kinetic variables are applied to obtain a clear missing mass peak and to
 These cuts are:
 
 * cut on missing mass (between 0.88 and 1 GeV), so that is near the neutron mass (~0.94 GeV);
-* cut on the polar angle of the transferred momentum: q<sub>t</sub>/q<sub>z</sub> < 0.12.
+* cut on the polar angle of the transferred momentum: q<sub>t</sub>/q<sub>z</sub> > 0.12.
 
 The candidated particles in this macro are identified **without** the use of PID. 
 Instead, they are selected using the following requests:
