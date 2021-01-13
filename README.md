@@ -41,6 +41,13 @@ Instead, they are selected using the following requests:
 The particles used for this selection (e.g. electron, proton, deuton) are identified by their PID.
 The selected particles are charged particles with intermediate mass (e.g. pions, muons, kaons).
 
+**Extra-feature**: the user can enable/disable the particle selection by PID. To do this, change the following lines in the code:
+
+```c++
+bool option_identified_pid=true/false;
+int identified_pid=211;
+```
+
 ## How to run the macro
 
 Clone the repository with:
