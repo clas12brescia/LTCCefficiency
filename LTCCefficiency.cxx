@@ -243,6 +243,11 @@ int LTCCefficiency(){
 	// check starting time
   system("date");
 
+	// Enable/disable particles selection using PID
+	// Pre-defined values: false, PID = 211
+	bool option_identified_pid=false;
+  int identified_pid=211; 
+
 //  bool short_run = 1; //1 = few hipo files, 0 = all list (NOT implemented in the present readfiles method)
   double E_beam = 10.1998;
   double target_mass = 0.93872;
@@ -317,6 +322,14 @@ int LTCCefficiency(){
       //emergency cutoff for few-event analysis
       ievent++;
       //if (ievent > 60) break;  
+
+			////////////////////////////////////////////////////////////////
+			// if selection by PID is enabled, select only particles with	//
+			// the PID assigned before																		//
+			// if disabled, the selection without PID is executed					//
+			if (option_identified_pid)																		//
+    	if ((*candidate)->getPid() != identified_pid) continue;				//
+			////////////////////////////////////////////////////////////////
 
 			// initialization of the reduced list of particle properties
 			// determination of missing momentum and total final momentum

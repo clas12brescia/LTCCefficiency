@@ -277,8 +277,8 @@ int LTCCefficiency_PID(){
 		// (e.g. missing mass)
     Filtered_Loop_Cutoffs loop_cuts;
     
-    c12.addExactPid(11,1);    				//exactly 1 electron
-    c12.addExactPid(second_pid,1);    //exactly 1 positive pion
+    c12.addAtLeastPid(11,1);    				//exactly 1 electron
+    c12.addAtLeastPid(second_pid,1);    //exactly 1 positive pion
     
     // loop over events
     while(c12.next()==true){
