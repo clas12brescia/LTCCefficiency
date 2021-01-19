@@ -28,6 +28,10 @@ correctly. Run with:
 ```bash
 clas12root view.cxx
 ```
+or
+```bash
+clas12root 'view.cxx("simple.hipo")'
+```
 and a 1D-histogram is showed.
 
 ### Notes
@@ -40,3 +44,18 @@ directly. So, one can in principle execute:
 clas12root simple_write.cxx --in=file.hipo
 ```
 to obtain a hipo file with selected events from a single hipo file.
+
+## simple_write2.cxx
+
+Same as above, but it use the TChain class. 
+The applied cut is the same.
+The result of the selection is written on the hipo file `simple2.hipo`.
+To view the result, use:
+```bash
+clas12root 'view.cxx("simple2.hipo")'
+```
+### Notes
+The readfiles method in this case is only one (named "readfiles.cxx"): 
+we used only the TChain class, and therefore we do not need the 
+HipoChain class anymore.
+

@@ -2,10 +2,10 @@
 
 using namespace std;
 
-int view(){  
+int view(string filename="simple.hipo"){  
 	TH1F* h=new TH1F("h","h",100,1,-1); 
 	
-	clas12reader c12("simple.hipo"); 
+	clas12reader c12(filename.c_str()); 
 	
 	c12.addAtLeastPid(11,1);  
 	
