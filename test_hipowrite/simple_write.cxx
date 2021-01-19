@@ -26,7 +26,7 @@ int readfiles_mod(HipoChain* chain);
 int simple_write(){
 
 	HipoChain chain;
-	readfiles(&chain);
+	readfiles_mod(&chain);
 
 	clas12writer c12writer("simple.hipo");
 	clas12reader* c12p=chain.GetC12Reader();
