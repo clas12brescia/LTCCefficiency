@@ -26,7 +26,7 @@
 
 using namespace clas12;
 
-int readfiles(TChain* chain);
+void readfiles(TChain* chain);
 
 void simple_write2(){
 
@@ -51,8 +51,8 @@ void simple_write2(){
 			//delete empty events
 			if(c12p.getDetParticles().empty()) continue;
 			
-			auto electron=c12p.getByID(11);
-			double Pe=electron[0]->getP();
+			auto electron=c12p.getByID(11)[0];
+			double Pe=electron->getP();
 
 			//cuts
 			if(Pe>9.5 && Pe<9.505){

@@ -17,7 +17,7 @@
 #include <functional>
 #include <sstream>
 #include <complex>
-#include "readfiles.cxx"
+#include "readfiles_mod.cxx"
 
 using namespace std;
 
@@ -40,8 +40,8 @@ int simple_write(){
 		}
 		
 		c12p->addAtLeastPid(11,1);
-		auto electron=c12p->getByID(11);
-		double Pe=electron[0]->getP();
+		auto electron=c12p->getByID(11)[0];
+		double Pe=electron->getP();
 
 		if(Pe>9.5 && Pe<9.505){
 			c12writer.writeEvent();
