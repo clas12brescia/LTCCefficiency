@@ -13,18 +13,22 @@ clas12root -b -q LTCCefficiency.cxx --in=input.dat
 You can use `input_006616.dat` of the directory `test_hipowrite`, if 
 you are working from ifarm.
 
-Then, the tree can be found in `LTCCefficiency_tree.root`:
+Then, the tree can be found in `LTCCefficiency_tree.root`. Use:
 ```bash
-root
-root[1] new TBrowser
+root -l LTCCefficiency_tree.root
+treeHisto->Print()
 ```
-and then click on `LTCCefficiency_tree` icon. 
-Then, click on the branches to see the histograms.
+to see the structure of the tree. If you want to see the tree in 
+TTreeViewer, instead of `Print()` use:
+```bash
+treeHisto->StartViewer()
+```
+## makeplot.cxx
 
-**WARNING**: 
-If you want to see all branches in TTreeViewer, click right button of 
-mouse on the `LTCCefficiency_tree` icon; then, click on _StartViewer_.
-Due to an error in the code, a lot of branches will appear, after some 
-seconds of loading.
- 
-
+The macro `makeplot.cxx` is a ROOT macro that draw and save some useful 
+histograms. Run with:
+```bash
+root -l makeplot.cxx
+```
+Four canvas of three 1D-histograms are showed and saved in `out.root` 
+file.
