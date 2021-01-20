@@ -87,6 +87,8 @@ The ouput will be something like this:
 
 This output is also saved in a pdf file with the same name of the ROOT file.
 
+Many other histograms are showed with `viewHistos.cxx`. (FIGURES: COMING SOON).
+
 Two extra histograms are present in this analysis. They are charges distribution of the candidated particles, before and after the missing mass cut.
 To draw these histograms, run:
 
