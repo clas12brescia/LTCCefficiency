@@ -349,6 +349,29 @@ int LTCCefficiency(){
 	// create a vector of useful histograms
   Histogram_Vector HV;
 	TTree* treeHisto = new TTree("treeHisto","Variables to produce the desired histograms");
+	
+	double candidate_P, candidate_theta, candidate_phi;
+	double costheta;
+	double x_false, y_false;
+	double P_Nphe, theta_Nphe, phi_Nphe;
+	double costheta_Nphe;
+	double x_Nphe, y_Nphe;
+	//Branches of TTree
+	//Before nphe check
+	treeHisto->Branch("P",&candidate_P,"P/D");
+	treeHisto->Branch("theta",&candidate_theta,"theta/D");
+	treeHisto->Branch("phi",&candidate_phi,"phi/D");
+	treeHisto->Branch("costheta",&costheta,"costheta/D");
+	treeHisto->Branch("x",&x_false,"x/D");
+	treeHisto->Branch("y",&y_false,"y/D");
+	//After nphe check
+	treeHisto->Branch("P_Nphe",&P_Nphe,"P_Nphe/D");
+	treeHisto->Branch("theta_Nphe",&theta_Nphe,"theta_Nphe/D");
+	treeHisto->Branch("phi_Nphe",&phi_Nphe,"phi_Nphe/D");
+	treeHisto->Branch("costheta_Nphe",&costheta_Nphe,"costheta_Nphe/D");
+	treeHisto->Branch("x_Nphe",&x_Nphe,"x_Nphe/D");
+	treeHisto->Branch("y_Nphe",&y_Nphe,"y_Nphe/D");
+			
 
 	// histograms for charged particle
   TH1F *h9 = new TH1F("histo9","charge of second track",5,-2.5,2.5);
@@ -445,12 +468,12 @@ int LTCCefficiency(){
       h9b->Fill( (*candidate)->par()->getCharge()  );
 
 			// survived candidates momentum magnitude
-      double candidate_P = (*candidate)->getP();
-			double candidate_theta = ((*candidate)->getTheta());
-			double candidate_phi = ((*candidate)->getPhi());
-			double x_false = sin(candidate_theta)*cos(candidate_phi);
-			double y_false = sin(candidate_theta)*sin(candidate_phi);
-			double costheta = cos(candidate_theta);
+      candidate_P = (*candidate)->getP();
+			candidate_theta = ((*candidate)->getTheta());
+			candidate_phi = ((*candidate)->getPhi());
+			x_false = sin(candidate_theta)*cos(candidate_phi);
+			y_false = sin(candidate_theta)*sin(candidate_phi);
+			costheta = cos(candidate_theta);
 
       // before photoelectron check
       HV.Fill(1,candidate_P);
@@ -462,14 +485,6 @@ int LTCCefficiency(){
 			HV.Fill(4,costheta,candidate_phi*rad_deg);
 			HV.Fill(6,candidate_P,candidate_theta*rad_deg);
 			HV.Fill(8,candidate_P,costheta);
-			//Branches of TTree
-			treeHisto->Branch("P",&candidate_P,"P/D");
-			treeHisto->Branch("theta",&candidate_theta,"theta/D");
-			treeHisto->Branch("phi",&candidate_phi,"phi/D");
-			treeHisto->Branch("costheta",&costheta,"costheta/D");
-			treeHisto->Branch("x",&x_false,"x/D");
-			treeHisto->Branch("y",&y_false,"y/D");
-
       // number of photoelectrons produced by the candidates in LTCC.
 			// Care: not an integer.
       double candidate_Nphe = (*candidate)->che(LTCC)->getNphe();
@@ -485,20 +500,13 @@ int LTCCefficiency(){
 				HV.Fill(5,costheta,candidate_phi*rad_deg);
 				HV.Fill(7,candidate_P,candidate_theta*rad_deg);
 				HV.Fill(9,candidate_P,costheta);
-				//
-				double P_Nphe = candidate_P;
-				double theta_Nphe = candidate_theta;
-				double phi_Nphe = candidate_phi;
-				double costheta_Nphe = costheta;
-				double x_Nphe = x_false;
-				double y_Nphe = y_false;
-				//Branches
-				treeHisto->Branch("P_Nphe",&P_Nphe,"P_Nphe/D");
-				treeHisto->Branch("theta_Nphe",&theta_Nphe,"theta_Nphe/D");
-				treeHisto->Branch("phi_Nphe",&phi_Nphe,"phi_Nphe/D");
-				treeHisto->Branch("costheta_Nphe",&costheta_Nphe,"costheta_Nphe/D");
-				treeHisto->Branch("x_Nphe",&x_Nphe,"x_Nphe/D");
-				treeHisto->Branch("y_Nphe",&y_Nphe,"y_Nphe/D");
+				//For Branches
+				P_Nphe = candidate_P;
+				theta_Nphe = candidate_theta;
+				phi_Nphe = candidate_phi;
+				costheta_Nphe = costheta;
+				x_Nphe = x_false;
+				y_Nphe = y_false;
 			}
 			
 			//Fill the tree
