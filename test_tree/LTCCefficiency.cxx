@@ -353,25 +353,18 @@ int LTCCefficiency(){
 	double candidate_P, candidate_theta, candidate_phi;
 	double costheta;
 	double x_false, y_false;
-	double P_Nphe, theta_Nphe, phi_Nphe;
-	double costheta_Nphe;
-	double x_Nphe, y_Nphe;
+	double candidate_Nphe;
 	//Branches of TTree
-	//Before nphe check
 	treeHisto->Branch("P",&candidate_P,"P/D");
 	treeHisto->Branch("theta",&candidate_theta,"theta/D");
 	treeHisto->Branch("phi",&candidate_phi,"phi/D");
 	treeHisto->Branch("costheta",&costheta,"costheta/D");
 	treeHisto->Branch("x",&x_false,"x/D");
 	treeHisto->Branch("y",&y_false,"y/D");
-	//After nphe check
-	treeHisto->Branch("P_Nphe",&P_Nphe,"P_Nphe/D");
-	treeHisto->Branch("theta_Nphe",&theta_Nphe,"theta_Nphe/D");
-	treeHisto->Branch("phi_Nphe",&phi_Nphe,"phi_Nphe/D");
-	treeHisto->Branch("costheta_Nphe",&costheta_Nphe,"costheta_Nphe/D");
-	treeHisto->Branch("x_Nphe",&x_Nphe,"x_Nphe/D");
-	treeHisto->Branch("y_Nphe",&y_Nphe,"y_Nphe/D");
-			
+	treeHisto->Branch("nphe",&candidate_Nphe,"nphe/D");
+	
+	TH1F *hall=new TH1F("hall","Candidate in LTCC; P(GeV/c)",100,0,10);
+	TH1F *hnphe=new TH1F("hnphe","Candidate hits in LTCC; P(GeV/c)",100,0,10);
 
 	// histograms for charged particle
   TH1F *h9 = new TH1F("histo9","charge of second track",5,-2.5,2.5);
@@ -487,7 +480,7 @@ int LTCCefficiency(){
 			HV.Fill(8,candidate_P,costheta);
       // number of photoelectrons produced by the candidates in LTCC.
 			// Care: not an integer.
-      double candidate_Nphe = (*candidate)->che(LTCC)->getNphe();
+      candidate_Nphe = (*candidate)->che(LTCC)->getNphe();
 			
       // require at least 1 photoelectron and fill histogram
       if (candidate_Nphe > 0.99){
@@ -500,13 +493,6 @@ int LTCCefficiency(){
 				HV.Fill(5,costheta,candidate_phi*rad_deg);
 				HV.Fill(7,candidate_P,candidate_theta*rad_deg);
 				HV.Fill(9,candidate_P,costheta);
-				//For Branches
-				P_Nphe = candidate_P;
-				theta_Nphe = candidate_theta;
-				phi_Nphe = candidate_phi;
-				costheta_Nphe = costheta;
-				x_Nphe = x_false;
-				y_Nphe = y_false;
 			}
 			
 			//Fill the tree
