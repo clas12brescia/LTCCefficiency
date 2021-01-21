@@ -64,14 +64,14 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 
 		can[k]->Write();
 
-		can[k+4] = new TCanvas(Form("can2%d",k+4),Form("can2%d",k+4),1500,600);
+		can[k+4] = new TCanvas(Form("can2_%d",k),Form("can2_%d",k),1500,600);
 		can[k+4]->Divide(3,1);
 		can[k+4]->cd(1);
-		htot2[k]->Draw();
+		htot2[k]->Draw("CONT4Z");
 		can[k+4]->cd(2);
-		hsel2[k]->Draw();
+		hsel2[k]->Draw("CONT4Z");
 		can[k+4]->cd(3);
-		hrt2[k]->Draw();
+		hrt2[k]->Draw("CONT4Z");
 
 		can[k+4]->Write();
 
