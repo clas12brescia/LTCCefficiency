@@ -1,2 +1,5 @@
-*.root
-*.dat
+*.d
+*.so
+*.pdf
+input_s2019.dat
+out_LTCCefficiency.root
