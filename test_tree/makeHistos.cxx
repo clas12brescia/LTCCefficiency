@@ -73,7 +73,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		can[k+4]->cd(3);
 		hrt2[k]->Draw();
 
-		can[k]->Write();
+		can[k+4]->Write();
 
 	}
 
@@ -89,8 +89,4 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 
 	out->Close();
 
-	delete ftree, treeHisto;
-//	delete[] htot, hsel, htot2, hsel2;
-//	delete[] hrt, hrt2;
-	delete[] can;
 }
