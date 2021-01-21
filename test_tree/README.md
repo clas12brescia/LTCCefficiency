@@ -32,3 +32,12 @@ root -l makeplot.cxx
 ```
 Four canvas of three 1D-histograms are showed and saved in `out.root` 
 file.
+
+## makeHistos
+
+The macro `makeHistos.cxx` is an upgrade of `makeplot.cxx` that draw and save some useful 
+histograms, both 1D and 2D. Run with:
+```bash
+root -l makeHistos.cxx
+```
+Eight canvas of three 1D- and 2D-histograms are showed and saved in `out.root` and in `out.pdf` files.
