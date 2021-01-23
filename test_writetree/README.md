@@ -23,7 +23,7 @@ In that way, the new hipo file will be named correctly.
 A new hipo file named `custom_filename.hipo` is created.
 Then, you can run the other macro to make the TTree. 
 
-## LTCCefficiency.root
+## LTCCefficiency.cxx
 
 Run with:
 ```bash
@@ -43,7 +43,7 @@ root[1] treeHisto->Print()						//Print the branches of the TTree (variables "Va
 root[2] treeHisto->Draw("Var")				//Draw the 1D-histogram of the variable "Var"
 root[3] treeHisto->Draw("Var2:Var1")	//Draw the 2D-histogram of the variables "Var1" (x) and "Var2" (y)
 ```
-For other details on TTree, see the[TTree class reference](https://root.cern.ch/doc/master/classTTree.html).
+For other details on TTree, see the [TTree class reference](https://root.cern.ch/doc/master/classTTree.html).
 
 ## Comments
 
