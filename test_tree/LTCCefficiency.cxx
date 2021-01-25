@@ -1,9 +1,17 @@
-// Run with:
-// clas12root LTCCefficiency.cxx
-// If readfiles method provide a text file reader using Argc, Argv:
-// clas12root LTCCefficiency.cxx --in=input_filename.dat (or .txt)
-// For compilable version, use "+" after ".cxx".
-// Histograms are saved in 'out_LTCCefficiency.root' file.
+//LTCCefficiency.cxx
+
+/*
+This macro select events in LTCC from hipo files and save some
+variables in a TTree to calculate the efficiency of the LTCC.
+
+Run with:
+clas12root LTCCefficiency.cxx
+If readfiles method provide a text file reader using Argc, Argv:
+clas12root LTCCefficiency.cxx --in=input_filename.dat (or .txt)
+For compilable version, use "+" after ".cxx".
+The TTree is saved in `LTCCefficiency_tree.root` ROOT file.
+For more details on this macro, see `README.md`.
+*/
 
 #include <iostream>
 #include <fstream>
@@ -37,6 +45,11 @@
 using namespace clas12;
 
 const double rad_deg = 57.2958;
+
+//////////////////////////////////////////////////////////
+// For more detailed descriptions of the classes below	//
+// see 'classes_description.md'													//
+//////////////////////////////////////////////////////////
 
 class Filtered_Particle {
 public:
@@ -205,13 +218,9 @@ public:
 
 // methods to read hipo files
 #include "readfiles.cxx"
-int readfiles(TChain *chain);
 
 //uses only 1 identified pid (electron) + 1 charged track only
 int LTCCefficiency(){
-
-	// check starting time
-  system("date");
 
 	// Enable/disable particles selection using PID
 	// Pre-defined values: false, PID = 211
@@ -340,18 +349,18 @@ int LTCCefficiency(){
 			costheta = cos(candidate_theta);
 			candidate_Nphe = (*candidate)->che(LTCC)->getNphe();
 
-			//Fill the tree
+			//Fill the TTree
 			treeHisto->Fill();
 
     }//loop over events
   }// loop over files
 
 	TFile* treeout = new TFile("LTCCefficiency_tree.root","RECREATE");
-	//Write tree in a root file
+
+	//Write the TTree in a root file
 	treeHisto->Write();
 
 	treeout->Close();
 
-  system("date");
   return 0;
 }

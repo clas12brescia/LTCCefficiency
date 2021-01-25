@@ -1,6 +1,4 @@
-# LTCCefficiency (tree)
-
-**WORK IN PROGRESS**
+# LTCCefficiency
 
 This macro is the same as LTCCefficiency.cxx of the parent directory, 
 but it also create and save a TTree with the useful variables to reproduce the 
