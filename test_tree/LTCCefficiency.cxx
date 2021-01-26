@@ -388,9 +388,11 @@ string filename(){
 	}
 
 	if(IsHipo){
+		input.erase(input.begin(),input.begin()+5);
 		input.erase(input.end()-5,input.end());
 	}
 	else{
+		input.erase(input.begin(),input.begin()+5);
 		input.erase(input.end()-4,input.end());
 	}
 

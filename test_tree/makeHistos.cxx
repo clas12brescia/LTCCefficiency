@@ -8,8 +8,6 @@ root -l 'makeHistos.cxx("tree_filename.root")'
 if you named this file differently from the default value.
 */
 
-string filename();
-
 void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	//read the TTree from root file created by LTCCefficiency.cxx
 	TFile *ftree = new TFile(treeFile.c_str());
@@ -75,8 +73,8 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	
 	//name the ouput file
 	string output = treeFile;
-	output.erase(treeFile.begin(),treeFile.begin()+20);
-	output.erase(treeFile.end()-5,treeFile.end());
+	output.erase(output.begin(),output.begin()+20);
+	output.erase(output.end()-5,output.end());
 	
 	//create an output file `out.root` with all histograms (organized in canvases)
 	TFile* out = new TFile(Form("out_%s.root",output.c_str()),"RECREATE");
