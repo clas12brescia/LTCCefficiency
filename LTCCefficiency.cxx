@@ -1,9 +1,17 @@
-// Run with:
-// clas12root LTCCefficiency.cxx
-// If readfiles method provide a text file reader using Argc, Argv:
-// clas12root LTCCefficiency.cxx --in=input_filename.dat (or .txt)
-// For compilable version, use "+" after ".cxx".
-// Histograms are saved in 'out_LTCCefficiency.root' file.
+//LTCCefficiency.cxx
+
+/*
+This macro select events in LTCC from hipo files and save some
+variables in a TTree to calculate the efficiency of the LTCC.
+
+Run with:
+clas12root LTCCefficiency.cxx
+If readfiles method provide a text file reader using Argc, Argv:
+clas12root LTCCefficiency.cxx --in=input_filename.dat (or .txt)
+For compilable version, use "+" after ".cxx".
+The TTree is saved in `LTCCefficiency_tree.root` ROOT file.
+For more details on this macro, see `README.md`.
+*/
 
 #include <iostream>
 #include <fstream>
@@ -32,10 +40,16 @@
 #include <TFile.h>
 #include <TCanvas.h>
 #include <TChain.h>
+#include <TTree.h>
 
 using namespace clas12;
 
 const double rad_deg = 57.2958;
+
+//////////////////////////////////////////////////////////
+// For more detailed descriptions of the classes below	//
+// see 'classes_description.md'													//
+//////////////////////////////////////////////////////////
 
 class Filtered_Particle {
 public:
@@ -196,130 +210,6 @@ public:
   }
 };
 
-//compacts some histograms always required in our analysis.
-class Histogram_Vector {
-public:
-  vector<TH1F*> VT;
-	vector<TH2F*> V2;
-  Histogram_Vector(){
-    TH1F *h0 = new TH1F("histo0","missing mass; mass (GeV/c^{2})",400,0,8);
-    TH1F *h1 = new TH1F("histo1","candidates in LTCC; P(GeV/c)",20,0,10);
-    TH1F *h2 = new TH1F("histo2","candidates with hits in LTCC; P(GeV/c)",
-			20,0,10);  
-		TH1F *h3 = new TH1F("histo3","candidates in LTCC; #theta(deg)",20,0, 1*rad_deg);
-    TH1F *h4 = new TH1F("histo4","candidates with hits in LTCC; #theta(deg)",
-			20,0, 1*rad_deg);
-		TH1F *h5 = new TH1F("histo5","candidates in LTCC; #phi(deg)",20, -3.15*rad_deg, 3.15*rad_deg);
-    TH1F *h6 = new TH1F("histo6","candidates with hits in LTCC; #phi(deg)",
-			20,-3.15*rad_deg, 3.15*rad_deg);
-		TH1F *h3bis = new TH1F("histo3bis","candidates in LTCC; cos(#theta)(#)",20, 0, 0.5);
-		TH1F *h4bis = new TH1F("histo4bis","candidates with hits in LTCC; cos(#theta)(#)",20, 0, 0.5);
-		
-		TH2F *h7 = new TH2F("histo7","'x' vs 'y' of candidates in LTCC", 20, -0.8,0.5,20,-0.7,0.7);
-		TH2F *h8 = new TH2F("histo8","'x' vs 'y' of candidates with hits in LTCC",20,-0.8,0.5,20,-0.7,0.7);
-		TH2F *h9 = new TH2F("histo9","#phi vs #theta (in LTCC); #theta(deg); #phi(deg)",20,0,1*rad_deg,20,-3.5*rad_deg, 3.5*rad_deg);
-		TH2F *h10 = new TH2F("histo10","#phi vs #theta (hits in LTCC); #theta(deg); #phi(deg)",20,0,1*rad_deg,20,-3.5*rad_deg, 3.5*rad_deg);
-		TH2F *h11 = new TH2F("histo11","#phi vs cos(#theta) (in LTCC); cos(#theta)(#); #phi(deg)",20,0,0.5,20,-3.5*rad_deg,3.5*rad_deg);
-		TH2F *h12 = new TH2F("histo12","#phi vs cos(#theta) (hits in LTCC); cos(#theta)(#); #phi(deg)",20,0,0.5,20,-3.5*rad_deg,3.5*rad_deg);
-		TH2F *h13 = new TH2F("histo13","P vs #theta (in LTCC); #theta(deg); P(GeV/c)",10,0,1*rad_deg,10,0,10);
-		TH2F *h14 = new TH2F("histo14","P vs #theta (hits in LTCC); #theta(deg); P(GeV/c)",10,0,1*rad_deg,10,0,10);
-		TH2F *h15 = new TH2F("histo15","P vs cos(#theta) (in LTCC); cos(#theta)(#); P(GeV/c)",20,0,0.5,20,0,10);
-		TH2F *h16 = new TH2F("histo16","P vs cos(#theta) (hits in LTCC); cos(#theta)(#); P(GeV/c)",20,0,0.5,20,0,10);
-		
-    VT.push_back(h0);
-    VT.push_back(h1);
-    VT.push_back(h2);
-		VT.push_back(h3);
-		VT.push_back(h4);
-		VT.push_back(h5);
-		VT.push_back(h6);
-		VT.push_back(h3bis);
-		VT.push_back(h4bis);
-		
-		V2.push_back(h7);
-		V2.push_back(h8);
-		V2.push_back(h9);
-		V2.push_back(h10);
-		V2.push_back(h11);
-		V2.push_back(h12);
-		V2.push_back(h13);
-		V2.push_back(h14);
-		V2.push_back(h15);
-		V2.push_back(h16);
-  }
-  void Fill(int i, double a){VT[i]->Fill(a);}
-	void Fill(int j, double a, double b){V2[j]->Fill(a,b);}
-  void Draw1(int i, TFile* out){
-      TCanvas *can = new TCanvas;
-      VT[i]->Draw();
-			VT[i]->Write();
-  }
-	void Draw2(int j, TFile* out){
-		TCanvas *can = new TCanvas;
-		V2[j]->Draw();
-		V2[j]->Write();
-	}
-  void Draw(TFile* out){
-    for (int i=0; i< VT.size(); i++) Draw1(i, out);
-		for (int j=0; j< V2.size(); j++) Draw2(j, out);
-  }
-  void SetRatio(int i, int j){
-    TH1F *hratio = (TH1F*) VT[i]->Clone("hratio");
-    hratio->SetTitle("ratio of LTCC-seen to all in sectors 3 and 5; P(GeV/c)");
-    hratio->SetStats(0); //statistic panel is useless
-    hratio->Divide(VT[j]);
-    VT.push_back(hratio);
-
-		TH1F *htheta = (TH1F*) VT[i+2]->Clone("htheta");
-    htheta->SetTitle("ratio of LTCC-seen to all in sectors 3 and 5; #theta(rad)");
-    htheta->SetStats(0); //statistic panel is useless
-    htheta->Divide(VT[j+2]);
-    VT.push_back(htheta);
-
-		TH1F *hphi = (TH1F*) VT[i+4]->Clone("hphi");
-    hphi->SetTitle("ratio of LTCC-seen to all in sectors 3 and 5; #phi(rad)");
-    hphi->SetStats(0); //statistic panel is useless
-    hphi->Divide(VT[j+4]);
-    VT.push_back(hphi);
-
-		TH1F *hcos = (TH1F*) VT[i+6]->Clone("hcos");
-    hcos->SetTitle("ratio of LTCC-seen to all in sectors 3 and 5; #phi(rad)");
-    hcos->SetStats(0); //statistic panel is useless
-    hcos->Divide(VT[j+6]);
-    VT.push_back(hcos);
-
-		TH2F *hxy = (TH2F*) V2[1]->Clone("hxy");
-		hxy->SetTitle("ratio of LTCC-seen to all in sectors 3 and 5; 'x' (#) vs 'y' (#)");
-		hxy->SetStats(0);
-		hxy->Divide(V2[0]);
-		V2.push_back(hxy);
-
-		TH2F *hangles = (TH2F*) V2[3]->Clone("hangles");
-		hangles->SetTitle("ratio of LTCC-seen to all in sectors 3 and 5; #theta(deg); #phi(deg)");
-		hangles->SetStats(0);
-		hangles->Divide(V2[2]);
-		V2.push_back(hangles);
-
-		TH2F *hphicos = (TH2F*) V2[5]->Clone("hphicos");
-		hphicos->SetTitle("ratio of LTCC-seen to all in sectors 3 and 5; cos(#theta)(#); #phi(deg)");
-		hphicos->SetStats(0);
-		hphicos->Divide(V2[4]);
-		V2.push_back(hphicos);
-
-		TH2F *hptheta = (TH2F*) V2[7]->Clone("hptheta");
-		hptheta->SetTitle("ratio of LTCC-seen to all in sectors 3 and 5; #theta(deg); P(GeV/c)");
-		hptheta->SetStats(0);
-		hptheta->Divide(V2[6]);
-		V2.push_back(hptheta);
-
-		TH2F *hpcos = (TH2F*) V2[9]->Clone("hpcos");
-		hpcos->SetTitle("ratio of LTCC-seen to all in sectors 3 and 5; cos(#theta); P(GeV/c)");
-		hpcos->SetStats(0);
-		hpcos->Divide(V2[8]);
-		V2.push_back(hpcos);
-  }
-};
-
 //////////////////////////////////////////////////////////
 // For more detailed descriptions of the classes above	//
 // see 'classes_description.md'													//
@@ -328,13 +218,12 @@ public:
 
 // methods to read hipo files
 #include "readfiles.cxx"
-int readfiles(TChain *chain);
+
+//to save the root file with the proper name
+string filename();
 
 //uses only 1 identified pid (electron) + 1 charged track only
 int LTCCefficiency(){
-
-	// check starting time
-  system("date");
 
 	// Enable/disable particles selection using PID
 	// Pre-defined values: false, PID = 211
@@ -345,12 +234,28 @@ int LTCCefficiency(){
   double E_beam = 10.1998;
   double target_mass = 0.93872;
 
-	// create a vector of useful histograms
-  Histogram_Vector HV;
-
-	// histograms for charged particle
-  TH1F *h9 = new TH1F("histo9","charge of second track",5,-2.5,2.5);
-  TH1F *h9b = new TH1F("histo9b","charge of second track after mm cut",5,-2.5,2.5);
+	// create a TTree to contain all the needed informations
+	TTree* treeHisto = new TTree("treeHisto","Variables to produce the desired histograms");
+	
+	double candidate_P, candidate_theta, candidate_phi;
+	double costheta;
+	double x_false, y_false;
+	double candidate_Nphe;
+	double missing_mass, candidate_charge;
+	//Branches of TTree
+	treeHisto->Branch("P",&candidate_P,"P/D");
+	treeHisto->Branch("theta",&candidate_theta,"theta/D");
+	treeHisto->Branch("phi",&candidate_phi,"phi/D");
+	treeHisto->Branch("costheta",&costheta,"costheta/D");
+	treeHisto->Branch("x",&x_false,"x/D");
+	treeHisto->Branch("y",&y_false,"y/D");
+	treeHisto->Branch("nphe",&candidate_Nphe,"nphe/D");
+	treeHisto->Branch("mm",&missing_mass,"mm/D");
+	treeHisto->Branch("charge",&candidate_charge,"charge/D");
+	
+	//Useful histogram to use in interactive mode
+	TH1F *hall=new TH1F("hall","Candidate in LTCC; P(GeV/c)",100,0,10);
+	TH1F *hnphe=new TH1F("hnphe","Candidate hits in LTCC; P(GeV/c)",100,0,10);
 
   // pre-loading of data files
   TChain chain;
@@ -427,81 +332,69 @@ int LTCCefficiency(){
 			// initialization of the reduced list of particle properties
 			// determination of missing momentum and total final momentum
       loop.setLoop();
-      
+
 			// calculate missing mass and fill the histogram
-      double missing_mass = loop.getMissingMass();      
-      HV.Fill(0,missing_mass);
+      missing_mass = loop.getMissingMass();
 
 			// histogram of charge of candidates
-      h9->Fill( (*candidate)->par()->getCharge()  ); 
+      candidate_charge = (*candidate)->par()->getCharge();
 
       // cuts on missing P variables:
 			// missing mass, missing energy > missing mass
 			if (loop_cuts.CutsOnMissingP(&loop)) continue;
 
-			// histogram of charge of candidates after cuts
-      h9b->Fill( (*candidate)->par()->getCharge()  );
+			// survived candidates variables
+      candidate_P = (*candidate)->getP();
+			candidate_theta = ((*candidate)->getTheta());
+			candidate_phi = ((*candidate)->getPhi());
+			x_false = sin(candidate_theta)*cos(candidate_phi);
+			y_false = sin(candidate_theta)*sin(candidate_phi);
+			costheta = cos(candidate_theta);
+			candidate_Nphe = (*candidate)->che(LTCC)->getNphe();
 
-			// survived candidates momentum magnitude
-      double candidate_P = (*candidate)->getP();
-			double candidate_theta = ((*candidate)->getTheta());
-			double candidate_phi = ((*candidate)->getPhi());
-			double x_false = sin(candidate_theta)*cos(candidate_phi);
-			double y_false = sin(candidate_theta)*sin(candidate_phi);
-			double costheta = cos(candidate_theta);
+			//Fill the TTree
+			treeHisto->Fill();
 
-      // before photoelectron check
-      HV.Fill(1,candidate_P);
-			HV.Fill(3,candidate_theta*rad_deg);
-			HV.Fill(5,candidate_phi*rad_deg);
-			HV.Fill(7,costheta);
-			HV.Fill(0,x_false, y_false);
-			HV.Fill(2,candidate_theta*rad_deg,candidate_phi*rad_deg);
-			HV.Fill(4,costheta,candidate_phi*rad_deg);
-			HV.Fill(6,candidate_P,candidate_theta*rad_deg);
-			HV.Fill(8,candidate_P,costheta);
-
-      // number of photoelectrons produced by the candidates in LTCC.
-			// Care: not an integer.
-      double candidate_Nphe = (*candidate)->che(LTCC)->getNphe();
-			
-      // require at least 1 photoelectron and fill histogram
-      if (candidate_Nphe > 0.99){
-				HV.Fill(2,candidate_P);
-				HV.Fill(4,candidate_theta*rad_deg);
-				HV.Fill(6,candidate_phi*rad_deg);
-				HV.Fill(8,costheta);
-				HV.Fill(1,x_false, y_false);
-				HV.Fill(3,candidate_theta*rad_deg,candidate_phi*rad_deg);
-				HV.Fill(5,costheta,candidate_phi*rad_deg);
-				HV.Fill(7,candidate_P,candidate_theta*rad_deg);
-				HV.Fill(9,candidate_P,costheta);
-			}
     }//loop over events
   }// loop over files
 
-	// root output file
-	TFile* out = new TFile("out_LTCCefficiency.root","RECREATE");
+	//create and name the root file with the TTree
+	string input = filename();
+	TFile* treeout = new TFile(Form("LTCCefficiency_tree_%s.root",input.c_str()),"RECREATE");
 
-	// draw and save charge distribution histograms
-  TCanvas *can9 = new TCanvas;
-  h9->Draw();
-	h9->Write();
-  TCanvas *can9b = new TCanvas;
-  h9b->Draw();
-	h9b->Write();
+	//Write the TTree in a root file
+	treeHisto->Write();
 
-  // set and create the ratio of histograms 1 and 2 (efficiency)
-	// candidates in LTCC with photoelectrons / all candidates in LTCC
-  HV.SetRatio(2,1);
+	treeout->Close();
 
-	// draw and save the four histograms:
-	// missing mass, candidates, candidates with photoelectrons, ratio
-  HV.Draw(out);
-
-	// close the root file
-	out->Close();
-  
-  system("date");
   return 0;
+}
+
+string filename(){
+	
+	//to save the tree with the name of the input file
+	string input;
+	bool IsHipo;
+	for(int i=0; i<gApplication->Argc();++i){
+		TString opt = gApplication->Argv(i);
+		if(opt.Contains(".dat")||opt.Contains(".txt")){
+	    input = opt;
+	    IsHipo = false;
+		}
+	  else if(opt.Contains(".hipo")){
+			input = opt;
+			IsHipo = true;
+		}
+	}
+
+	if(IsHipo){
+		input.erase(input.begin(),input.begin()+5);
+		input.erase(input.end()-5,input.end());
+	}
+	else{
+		input.erase(input.begin(),input.begin()+5);
+		input.erase(input.end()-4,input.end());
+	}
+
+	return input;
 }
