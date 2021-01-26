@@ -219,6 +219,9 @@ public:
 // methods to read hipo files
 #include "readfiles.cxx"
 
+//to save the root file with the proper name
+string filename();
+
 //uses only 1 identified pid (electron) + 1 charged track only
 int LTCCefficiency(){
 
@@ -355,7 +358,9 @@ int LTCCefficiency(){
     }//loop over events
   }// loop over files
 
-	TFile* treeout = new TFile("LTCCefficiency_tree.root","RECREATE");
+	//create and name the root file with the TTree
+	string input = filename();
+	TFile* treeout = new TFile(Form("LTCCefficiency_tree_%s.root",input.c_str()),"RECREATE");
 
 	//Write the TTree in a root file
 	treeHisto->Write();
@@ -363,4 +368,31 @@ int LTCCefficiency(){
 	treeout->Close();
 
   return 0;
+}
+
+string filename(){
+	
+	//to save the tree with the name of the input file
+	string input;
+	bool IsHipo;
+	for(int i=0; i<gApplication->Argc();++i){
+		TString opt = gApplication->Argv(i);
+		if(opt.Contains(".dat")||opt.Contains(".txt")){
+	    input = opt;
+	    IsHipo = false;
+		}
+	  else if(opt.Contains(".hipo")){
+			input = opt;
+			IsHipo = true;
+		}
+	}
+
+	if(IsHipo){
+		input.erase(input.end()-5,input.end());
+	}
+	else{
+		input.erase(input.end()-4,input.end());
+	}
+
+	return input;
 }

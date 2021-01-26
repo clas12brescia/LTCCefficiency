@@ -8,6 +8,8 @@ root -l 'makeHistos.cxx("tree_filename.root")'
 if you named this file differently from the default value.
 */
 
+string filename();
+
 void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	//read the TTree from root file created by LTCCefficiency.cxx
 	TFile *ftree = new TFile(treeFile.c_str());
@@ -71,8 +73,13 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		hrt2[j]->Divide(htot2[j]);
 	}
 	
+	//name the ouput file
+	string output = treeFile;
+	output.erase(treeFile.begin(),treeFile.begin()+20);
+	output.erase(treeFile.end()-5,treeFile.end());
+	
 	//create an output file `out.root` with all histograms (organized in canvases)
-	TFile* out = new TFile("out.root","RECREATE");
+	TFile* out = new TFile(Form("out_%s.root",output.c_str()),"RECREATE");
 	//array of canvases pointers
 	TCanvas** can = new TCanvas*[8];
 	//draw and save canvases
@@ -102,17 +109,17 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		can[k+4]->Write();
 
 	}
-
+	
 	//save the canvases in a unique pdf file
 	//one canvas for each page
-	can[0]->SaveAs("out.pdf("); // <-- first page
-	can[1]->SaveAs("out.pdf");
-	can[2]->SaveAs("out.pdf");
-	can[3]->SaveAs("out.pdf");
-	can[4]->SaveAs("out.pdf");
-	can[5]->SaveAs("out.pdf");
-	can[6]->SaveAs("out.pdf");
-	can[7]->SaveAs("out.pdf)"); // <-- last page
+	can[0]->SaveAs(Form("out_%s.pdf(",output.c_str())); // <-- first page
+	can[1]->SaveAs(Form("out_%s.pdf",output.c_str()));
+	can[2]->SaveAs(Form("out_%s.pdf",output.c_str()));
+	can[3]->SaveAs(Form("out_%s.pdf",output.c_str()));
+	can[4]->SaveAs(Form("out_%s.pdf",output.c_str()));
+	can[5]->SaveAs(Form("out_%s.pdf",output.c_str()));
+	can[6]->SaveAs(Form("out_%s.pdf",output.c_str()));
+	can[7]->SaveAs(Form("out_%s.pdf)",output.c_str())); // <-- last page
 
 	out->Close();
 
