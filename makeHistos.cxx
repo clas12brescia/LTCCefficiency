@@ -14,9 +14,9 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	TTree *treeHisto = (TTree*)ftree->Get("treeHisto");
 	
 	//define histograms arrays to plot total and selected events
-	//total = only kinetic cuts; selected = nphe>1
+	//total = only kinetic cuts; selected = nphe>1 and nphe>2
 	TH1F * htot[4];
-	TH1F * hsel[4];
+	TH1F * hsel[8];
 	TH2F * htot2[4];
 	TH2F * hsel2[4];
 	//min and max of ranges for variables:
@@ -39,7 +39,8 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	//create histograms arrays with ranges and title defined before
 	for(int j=0; j<4; j++){
 		htot[j] = new TH1F(Form("h%d",j+1),Form("Candidates in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
-		hsel[j] = new TH1F(Form("h%d",j+5),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
+		hsel[j] = new TH1F(Form("h%d",j+5),Form("Candidate hits in LTCC (n_{phe}>1) [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
+		hsel[j+4] = new TH1F(Form("h%d",j+9),Form("Candidate hits in LTCC (n_{phe}>2) [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
 		htot2[j] = new TH2F(Form("h2%d",j+1),Form("Candidates in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),20,inf2[j][0],max2[j][0],20,inf2[j][1],max2[j][1]);
 		hsel2[j] = new TH2F(Form("h2%d",j+5),Form("Candidate hits in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),20,inf2[j][0],max2[j][0],20,inf2[j][1],max2[j][1]);
 	}
@@ -48,6 +49,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		//1D
 		treeHisto->Project(Form("h%d",j+1), varsToProject[j].c_str());
 		treeHisto->Project(Form("h%d",j+5), varsToProject[j].c_str(), "nphe>1");	//condition on photoelectrons
+		treeHisto->Project(Form("h%d",j+9), varsToProject[j].c_str(), "nphe>2");	//condition on photoelectrons
 		//2D
 		treeHisto->Project(Form("h2%d",j+1), pair[j][0].c_str());
 		treeHisto->Project(Form("h2%d",j+5), pair[j][0].c_str(),"nphe>1");				//condition on photoelectrons
@@ -89,6 +91,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		htot[k]->Draw();
 		can[k]->cd(2);
 		hsel[k]->Draw();
+		hsel[k+4]->Draw("SAME");
 		can[k]->cd(3);
 		hrt[k]->Draw();
 

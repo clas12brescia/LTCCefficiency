@@ -242,6 +242,8 @@ int LTCCefficiency(){
 	double x_false, y_false;
 	double candidate_Nphe;
 	double missing_mass, candidate_charge;
+	double candidate_chi2pid;
+	int candidate_status;
 	//Branches of TTree
 	treeHisto->Branch("P",&candidate_P,"P/D");
 	treeHisto->Branch("theta",&candidate_theta,"theta/D");
@@ -252,6 +254,8 @@ int LTCCefficiency(){
 	treeHisto->Branch("nphe",&candidate_Nphe,"nphe/D");
 	treeHisto->Branch("mm",&missing_mass,"mm/D");
 	treeHisto->Branch("charge",&candidate_charge,"charge/D");
+	treeHisto->Branch("chi2pid",&candidate_chi2pid,"chi2pid/D");
+	treeHisto->Branch("status",&candidate_status,"status/I");
 	
 	//Useful histogram to use in interactive mode
 	TH1F *hall=new TH1F("hall","Candidate in LTCC; P(GeV/c)",100,0,10);
@@ -333,11 +337,13 @@ int LTCCefficiency(){
 			// determination of missing momentum and total final momentum
       loop.setLoop();
 
-			// calculate missing mass and fill the histogram
+			// calculate missing mass
       missing_mass = loop.getMissingMass();
 
-			// histogram of charge of candidates
+			// values of some useful candidates info (before missing mass cut)
       candidate_charge = (*candidate)->par()->getCharge();
+			candidate_chi2pid = (*candidate)->par()->getChi2Pid();
+			candidate_status = (*candidate)->par()->getStatus();
 
       // cuts on missing P variables:
 			// missing mass, missing energy > missing mass
