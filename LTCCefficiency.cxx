@@ -351,11 +351,11 @@ int LTCCefficiency(){
 
 			// survived candidates variables
       candidate_P = (*candidate)->getP();
-			candidate_theta = ((*candidate)->getTheta());
-			candidate_phi = ((*candidate)->getPhi());
-			x_false = sin(candidate_theta)*cos(candidate_phi);
-			y_false = sin(candidate_theta)*sin(candidate_phi);
-			costheta = cos(candidate_theta);
+			candidate_theta = ((*candidate)->getTheta())*rad_deg;
+			candidate_phi = ((*candidate)->getPhi())*rad_deg;
+			x_false = sin(candidate_theta/rad_deg)*cos(candidate_phi/rad_deg);
+			y_false = sin(candidate_theta/rad_deg)*sin(candidate_phi/rad_deg);
+			costheta = cos(candidate_theta/rad_deg);
 			candidate_Nphe = (*candidate)->che(LTCC)->getNphe();
 
 			//Fill the TTree
