@@ -24,12 +24,12 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	TH2F * hsel2[8];
 	//min and max of ranges for variables:
 	// P, theta, phi, costheta
-	double inf[4]={0,0,-3.5*rad_deg,0.5};
-	double max[4]={10,1*rad_deg,3.5*rad_deg,1};
+	double inf[4]={0,0,-200,0.8};
+	double max[4]={10,40,200,1};
 	//ranges for 2D-histograms variables pairs:
 	// (x,y), (theta, phi), (costheta, phi), (P, costheta)
-	double inf2[4][2]={{-0.8,-0.7},{0,-3.5*rad_deg},{0,-3.5*rad_deg},{0,0}};
-	double max2[4][2]={{0.5,0.7},{1*rad_deg,3.5*rad_deg},{1,3.5*rad_deg},{10,1}};
+	double inf2[4][2]={{-0.8,-0.7},{0,-200},{0.8,-200},{0,0.8}};
+	double max2[4][2]={{0.5,0.7},{40,200},{1,200},{10,1}};
 	//customize the binning of the histograms
 	// P, theta, phi, costheta
 //double bins[4]={20,20,20,20};
@@ -37,9 +37,9 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 //double bins[4][2]={{20,20},{20,20},{20,20},{20,20}};
 	
 	//title of axes, variables and variables pairs
-	string var[6]={"P(GeV/c)","#theta(rad)","#phi(rad)","cos(#theta)(#)"};
+	string var[6]={"P(GeV/c)","#theta(deg)","#phi(deg)","cos(#theta)(#)"};
 	string varsToProject[4] = {"P", "theta", "phi", "costheta"};
-	string pair[4][2]={{"y:x","x(#); y(#)"},{"phi:theta","#theta(rad); #phi(rad)"},{"phi:costheta","cos#theta(#); #phi(rad)"},{"costheta:P","P(GeV/c); cos#theta(#)"}};
+	string pair[4][2]={{"y:x","x(#); y(#)"},{"phi:theta","#theta(deg); #phi(deg)"},{"phi:costheta","cos#theta(#); #phi(deg)"},{"costheta:P","P(GeV/c); cos#theta(#)"}};
 	
 	//create histograms arrays with ranges and title defined before
 	for(int j=0; j<4; j++){
@@ -58,21 +58,21 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	for(int j=0; j<4; j++){
 		//1D
 		// sector 3
-		treeHisto->Project(Form("ht%d",j+1), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2110 && y>0");
-		treeHisto->Project(Form("hs1%d",j+1), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2110 && y>0 && nphe>1");	//condition on photoelectrons
-		treeHisto->Project(Form("hs2%d",j+1), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2110 && y>0 && nphe>2");	//condition on photoelectrons
+		treeHisto->Project(Form("ht%d",j+1), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2109 && y>0");
+		treeHisto->Project(Form("hs1%d",j+1), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2109 && y>0 && nphe>1");	//condition on photoelectrons
+		treeHisto->Project(Form("hs2%d",j+1), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2109 && y>0 && nphe>2");	//condition on photoelectrons
 		// sector 5
-		treeHisto->Project(Form("ht%d",j+5), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2110 && y<0");
-		treeHisto->Project(Form("hs1%d",j+5), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2110 && y<0 && nphe>1");	//condition on photoelectrons
-		treeHisto->Project(Form("hs2%d",j+5), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2110 && y<0 && nphe>2");	//condition on photoelectrons
+		treeHisto->Project(Form("ht%d",j+5), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2109 && y<0");
+		treeHisto->Project(Form("hs1%d",j+5), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2109 && y<0 && nphe>1");	//condition on photoelectrons
+		treeHisto->Project(Form("hs2%d",j+5), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2109 && y<0 && nphe>2");	//condition on photoelectrons
 
 		//2D
 		// sector 3
-		treeHisto->Project(Form("h2%d",j+1), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2110 && y>0");
-		treeHisto->Project(Form("h2%d",j+5), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2110 && nphe>2 && y>0");	//condition on photoelectrons
+		treeHisto->Project(Form("h2%d",j+1), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2109 && y>0");
+		treeHisto->Project(Form("h2%d",j+5), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2109 && nphe>2 && y>0");	//condition on photoelectrons
 		// sector 5
-		treeHisto->Project(Form("h2%d",j+9), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2110 && y<0");
-		treeHisto->Project(Form("h2%d",j+13), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2110 && nphe>2 && y<0");
+		treeHisto->Project(Form("h2%d",j+9), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2109 && y<0");
+		treeHisto->Project(Form("h2%d",j+13), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2109 && nphe>2 && y<0");
 	}
 
 	//define histograms arrays for efficiency (ratio total/selected)

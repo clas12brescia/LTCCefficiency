@@ -147,7 +147,7 @@ class Starting_Cutoffs {
   const int wanted_region = 2000;
   const int in_out_LTCC = -1; //0 = electron everywhere, +1 = in LTCC, -1 = out
   const double pt_min = 0.8; //alternative with the following
-  const double min_q_angle = 0.12;
+  const double min_q_angle = 0.;
   clas12reader *c12;
 public:
   Starting_Cutoffs(clas12reader *C12) {c12=C12;}
