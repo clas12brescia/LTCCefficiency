@@ -17,8 +17,9 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	
 	//define histograms arrays to plot total and selected events
 	//total = only kinetic cuts; selected = nphe>1 (+ nphe>2 for 1D)
-	TH1F * htot[4];
-	TH1F * hsel[8];
+	TH1F * htot[8];
+	TH1F * hsel_1[8];
+	TH1F * hsel_2[8];
 	TH2F * htot2[8];
 	TH2F * hsel2[8];
 	//min and max of ranges for variables:
@@ -42,10 +43,12 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	
 	//create histograms arrays with ranges and title defined before
 	for(int j=0; j<4; j++){
-		htot[j] = new TH1F(Form("h%d",j+1),Form("Candidates in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
-		hsel[j] = new TH1F(Form("h%d",j+5),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
-//		htot[j+4] = new TH1F(Form("h%d",j+9),Form("Candidates in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
-		hsel[j+4] = new TH1F(Form("h%d",j+9),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
+		htot[j] = new TH1F(Form("ht%d",j+1),Form("Candidates in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
+		hsel_1[j] = new TH1F(Form("hs1%d",j+1),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
+		htot[j+4] = new TH1F(Form("ht%d",j+5),Form("Candidates in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
+		hsel_1[j+4] = new TH1F(Form("hs1%d",j+5),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
+		hsel_2[j] = new TH1F(Form("hs2%d",j+1),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
+		hsel_2[j+4] = new TH1F(Form("hs2%d",j+5),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
 		htot2[j] = new TH2F(Form("h2%d",j+1),Form("Candidates in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),20,inf2[j][0],max2[j][0],20,inf2[j][1],max2[j][1]);
 		hsel2[j] = new TH2F(Form("h2%d",j+5),Form("Candidate hits in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),20,inf2[j][0],max2[j][0],20,inf2[j][1],max2[j][1]);
 		htot2[j+4] = new TH2F(Form("h2%d",j+9),Form("Candidates in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),20,inf2[j][0],max2[j][0],20,inf2[j][1],max2[j][1]);
@@ -54,34 +57,50 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	//fill the histograms arrays with the tree branches
 	for(int j=0; j<4; j++){
 		//1D
-		treeHisto->Project(Form("h%d",j+1), varsToProject[j].c_str(), "chi2pid<3 && status>2110");
-		treeHisto->Project(Form("h%d",j+5), varsToProject[j].c_str(), "chi2pid<3 && status>2110 && nphe>1");	//condition on photoelectrons
-		treeHisto->Project(Form("h%d",j+9), varsToProject[j].c_str(), "chi2pid<3 && status>2110 && nphe>2");	//condition on photoelectrons
+		// sector 3
+		treeHisto->Project(Form("ht%d",j+1), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2110 && y>0");
+		treeHisto->Project(Form("hs1%d",j+1), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2110 && y>0 && nphe>1");	//condition on photoelectrons
+		treeHisto->Project(Form("hs2%d",j+1), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2110 && y>0 && nphe>2");	//condition on photoelectrons
+		// sector 5
+		treeHisto->Project(Form("ht%d",j+5), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2110 && y<0");
+		treeHisto->Project(Form("hs1%d",j+5), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2110 && y<0 && nphe>1");	//condition on photoelectrons
+		treeHisto->Project(Form("hs2%d",j+5), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2110 && y<0 && nphe>2");	//condition on photoelectrons
+
 		//2D
 		// sector 3
-		treeHisto->Project(Form("h2%d",j+1), pair[j][0].c_str(),"chi2pid<3 && status>2110 && y>0");
-		treeHisto->Project(Form("h2%d",j+5), pair[j][0].c_str(),"chi2pid<3 && status>2110 && nphe>1 && y>0");	//condition on photoelectrons
+		treeHisto->Project(Form("h2%d",j+1), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2110 && y>0");
+		treeHisto->Project(Form("h2%d",j+5), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2110 && nphe>2 && y>0");	//condition on photoelectrons
 		// sector 5
-		treeHisto->Project(Form("h2%d",j+9), pair[j][0].c_str(),"chi2pid<3 && status>2110 && y<0");
-		treeHisto->Project(Form("h2%d",j+13), pair[j][0].c_str(),"chi2pid<3 && status>2110 && nphe>1 && y<0");
+		treeHisto->Project(Form("h2%d",j+9), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2110 && y<0");
+		treeHisto->Project(Form("h2%d",j+13), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2110 && nphe>2 && y<0");
 	}
 
 	//define histograms arrays for efficiency (ratio total/selected)
-	TH1F * hrt[8];
+	TH1F * hrt[16];
 	TH2F * hrt2[8];
 
 	//create the ratio histograms
 	for(int j=0; j<4;j++){ 
 		//1D
-		hrt[j] = (TH1F*) hsel[j]->Clone(Form("hrt%d",j+1));
-		hrt[j]->SetTitle(Form("Ratio of candidates in sector 3-5 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
+		hrt[j] = (TH1F*) hsel_1[j]->Clone(Form("hrt%d",j+1));
+		hrt[j]->SetTitle(Form("Ratio of candidates in sector 3 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
 		hrt[j]->SetStats(0);
 		hrt[j]->Divide(htot[j]);
 
-		hrt[j+4] = (TH1F*) hsel[j+4]->Clone(Form("hrt%d",j+5));
-		hrt[j+4]->SetTitle(Form("Ratio of candidates in sector 3-5 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
+		hrt[j+4] = (TH1F*) hsel_2[j]->Clone(Form("hrt%d",j+5));
+		hrt[j+4]->SetTitle(Form("Ratio of candidates in sector 3 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
 		hrt[j+4]->SetStats(0);
 		hrt[j+4]->Divide(htot[j]);
+
+		hrt[j+8] = (TH1F*) hsel_1[j+4]->Clone(Form("hrt%d",j+9));
+		hrt[j+8]->SetTitle(Form("Ratio of candidates in sector 5 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
+		hrt[j+8]->SetStats(0);
+		hrt[j+8]->Divide(htot[j+4]);
+
+		hrt[j+12] = (TH1F*) hsel_2[j+4]->Clone(Form("hrt%d",j+13));
+		hrt[j+12]->SetTitle(Form("Ratio of candidates in sector 5 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
+		hrt[j+12]->SetStats(0);
+		hrt[j+12]->Divide(htot[j+4]);
 		//2D
 		hrt2[j] = (TH2F*) hsel2[j]->Clone(Form("hrt2%d",j+1));
 		hrt2[j]->SetTitle(Form("Ratio of candidates in sector 3 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()));
@@ -99,11 +118,21 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	output.erase(output.begin(),output.begin()+20);
 	output.erase(output.end()-5,output.end());
 	
+	TH1F* htot35[4];
+	TH1F* hsel35_1[4];
+	TH1F* hsel35_2[4];
 	TH2F* htot235[4];
 	TH2F* hsel235[4];
 
-	// 2D histograms both sectors 3 and 5
+	// 1D and 2D histograms both sectors 3 and 5
 	for(int l=0; l<4; l++){
+		htot35[l] = (TH1F*) htot[l]->Clone("htot35");
+		htot35[l]->Add(htot[l+4]);
+		hsel35_1[l] = (TH1F*) hsel_1[l]->Clone("hsel35_1");
+		hsel35_1[l]->Add(hsel_1[l+4]);
+		hsel35_2[l] = (TH1F*) hsel_2[l]->Clone("hsel35_2");
+		hsel35_2[l]->Add(hsel_2[l+4]);
+
 		htot235[l] = (TH2F*) htot2[l]->Clone("htot235");
 		htot235[l]->Add(htot2[l+4]);
 		hsel235[l] = (TH2F*) hsel2[l]->Clone("hsel235");
@@ -116,18 +145,18 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	//draw and save canvases
 	for(int k=0; k<4; k++){
 		//1D (from can0 to can3)
-		can[k] = new TCanvas(Form("can%d",k),Form("can%d",k),1500,600);
-		can[k]->Divide(3,1);
+		can[k] = new TCanvas(Form("can%d",k),Form("can%d",k),800,800);
+		can[k]->Divide(2,2);
 		can[k]->cd(1);
-		htot[k]->Draw();
+		htot35[k]->Draw();
 		can[k]->cd(2);
-		hsel[k]->Draw();
-		hsel[k+4]->SetLineColor(kRed);
+		hsel35_1[k]->Draw();
+		hsel35_2[k]->SetLineColor(kRed);
 		auto legend = new TLegend(0.9,0.9,0.7,0.8);
-		legend->AddEntry(hsel[k],"n_{phe}>1","l");
-   	legend->AddEntry(hsel[k+4],"n_{phe}>2","l");
+		legend->AddEntry(hsel35_1[k],"n_{phe}>1","l");
+   	legend->AddEntry(hsel35_2[k],"n_{phe}>2","l");
    	legend->Draw();
-		hsel[k+4]->Draw("SAME");
+		hsel35_2[k]->Draw("SAME");
 		can[k]->cd(3);
 		hrt[k]->Draw();
 		hrt[k+4]->SetLineColor(kRed);
@@ -136,6 +165,14 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
    	legend2->AddEntry(hrt[k+4],"n_{phe}>2","l");
    	legend2->Draw();
 		hrt[k+4]->Draw("SAME");
+		can[k]->cd(4);
+		hrt[k+8]->Draw();
+		hrt[k+12]->SetLineColor(kRed);
+		auto legend3 = new TLegend(0.9,0.9,0.7,0.8);
+		legend3->AddEntry(hrt[k],"n_{phe}>1","l");
+   	legend3->AddEntry(hrt[k+4],"n_{phe}>2","l");
+   	legend3->Draw();
+		hrt[k+12]->Draw("SAME");
 
 		can[k]->Write();
 
