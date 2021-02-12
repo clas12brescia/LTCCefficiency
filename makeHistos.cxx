@@ -22,24 +22,26 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	TH1F * hsel_2[8];
 	TH2F * htot2[8];
 	TH2F * hsel2[8];
+	TH3F * htot3D = new TH3F("ht3D","Candidates in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",12,2.5,8.5,10,0,40,100,-200,200);
+	TH3F * hsel3D = new TH3F("hs3D","Candidate hits in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",12,2.5,8.5,10,0,40,100,-200,200);
 	//min and max of ranges for variables:
 	// P, theta, phi, costheta
 	double inf[4]={0,0,-200,0.8};
 	double max[4]={10,40,200,1};
 	//ranges for 2D-histograms variables pairs:
 	// (x,y), (theta, phi), (costheta, phi), (P, costheta)
-	double inf2[4][2]={{-500,-500},{0,-200},{0.8,-200},{0,0.8}};
-	double max2[4][2]={{500,500},{40,200},{1,200},{10,1}};
+	double inf2[4][2]={{-500,-500},{-200,0},{0.8,-200},{0,0.8}};
+	double max2[4][2]={{500,500},{200,40},{1,200},{10,1}};
 	//customize the binning of the histograms
 	// P, theta, phi, costheta
-//double bins[4]={20,20,20,20};
+	//double bins[4]={20,20,20,20};
 	// (x,y), (theta, phi), (costheta, phi), (P, costheta)
-//double bins[4][2]={{20,20},{20,20},{20,20},{20,20}};
+	//double bins[4][2]={{20,20},{20,20},{20,20},{20,20}};
 	
 	//title of axes, variables and variables pairs
 	string var[6]={"P(GeV/c)","#theta(deg)","#phi(deg)","cos(#theta)(#)"};
 	string varsToProject[4] = {"P", "theta", "phi", "costheta"};
-	string pair[4][2]={{"Y:X","x(cm); y(cm)"},{"phi:theta","#theta(deg); #phi(deg)"},{"phi:costheta","cos#theta(#); #phi(deg)"},{"costheta:P","P(GeV/c); cos#theta(#)"}};
+	string pair[4][2]={{"Y:X","x(cm); y(cm)"},{"theta:phi","#phi(deg);#theta(deg)"},{"phi:costheta","cos#theta(#); #phi(deg)"},{"costheta:P","P(GeV/c); cos#theta(#)"}};
 	
 	//create histograms arrays with ranges and title defined before
 	for(int j=0; j<4; j++){
@@ -74,10 +76,15 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		treeHisto->Project(Form("h2%d",j+9), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2109 && y<0");
 		treeHisto->Project(Form("h2%d",j+13), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2109 && nphe>2 && y<0");
 	}
+	
+	//3D
+	treeHisto->Project("ht3D","phi:theta:P","abs(chi2pid)<3 && status>2109");
+	treeHisto->Project("hs3D","phi:theta:P","abs(chi2pid)<3 && status>2109 && nphe>2");
 
 	//define histograms arrays for efficiency (ratio total/selected)
 	TH1F * hrt[16];
 	TH2F * hrt2[8];
+	TH3F * hrt3D;
 
 	//create the ratio histograms
 	for(int j=0; j<4;j++){ 
@@ -112,6 +119,11 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		hrt2[j+4]->SetStats(0);
 		hrt2[j+4]->Divide(htot2[j+4]);
 	}
+	//3D
+	hrt3D = (TH3F*) hsel3D->Clone("hrt3D");
+	hrt3D->SetTitle("Efficiency in sectors 3 and 5 [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)");
+	hrt3D->SetStats(0);
+	hrt3D->Divide(htot3D);
 	
 	//name the ouput file
 	string output = treeFile;
@@ -177,21 +189,47 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		can[k]->Write();
 
 		//2D (from can2_0 to can2_3)
+		string option;
+		if(k==1){
+			option="CONT4Z POL";
+		}
+		else{
+			option="CONT4Z";
+		}
 		can[k+4] = new TCanvas(Form("can2_%d",k),Form("can2_%d",k),800,800);
 		can[k+4]->Divide(2,2);
 		can[k+4]->cd(1);
-		htot235[k]->Draw("CONT4Z");
+		htot235[k]->Draw(option.c_str());
 		can[k+4]->cd(2);
-		hsel235[k]->Draw("CONT4Z");
+		hsel235[k]->Draw(option.c_str());
 		can[k+4]->cd(3);
-		hrt2[k]->Draw("CONT4Z");
+		hrt2[k]->Draw(option.c_str());
 		can[k+4]->cd(4);
-		hrt2[k+4]->Draw("CONT4Z");
+		hrt2[k+4]->Draw(option.c_str());
 
 		can[k+4]->Write();
 
 	}
+	/*TCanvas* cancan = new TCanvas("cancan","cancan",1500,600);
+	cancan->Divide(3,1);
+	cancan->cd(1);
+	htot3D->Draw("SURF1Z");
+	cancan->cd(2);
+	hsel3D->Draw("SURF1Z");
+	cancan->cd(3);
+	hrt3D->Draw("SURF1Z");*/
 	
+	ofstream fout("P_theta_phi_efficiency.dat");
+	for(int i=0; i<12; i++){
+		for(int j=0; j<10; j++){
+			for(int k=0; k<100; k++){
+				fout<<hrt3D->GetXaxis()->GetBinCenter(i);
+				fout<<"\t"<<hrt3D->GetYaxis()->GetBinCenter(j);
+				fout<<"\t"<<hrt3D->GetZaxis()->GetBinCenter(k);
+				fout<<"\t"<<hrt3D->GetBinContent(i,j,k)<<endl;
+			}
+		}
+	}
 	//save the canvases in a unique pdf file
 	//one canvas for each page
 	can[0]->SaveAs(Form("out_%s.pdf(",output.c_str())); // <-- first page
@@ -204,5 +242,6 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	can[7]->SaveAs(Form("out_%s.pdf)",output.c_str())); // <-- last page
 
 	out->Close();
+	fout.close();
 
 }
