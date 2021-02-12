@@ -170,7 +170,7 @@ public:
     double qz = 10.2-pz;
     double q_ratio = pt/qz;
     //if (pt < pt_min) return 1;
-    if (q_ratio < min_q_angle) return 1;
+    //if (q_ratio < min_q_angle) return 1;
     return 0;
   }
   int CutsOnTestParticle(int pid){
@@ -239,7 +239,7 @@ int LTCCefficiency(){
 	
 	double candidate_P, candidate_theta, candidate_phi;
 	double costheta;
-	double x_false, y_false;
+	double x_false, y_false, candidate_X, candidate_Y;
 	double candidate_Nphe;
 	double missing_mass, candidate_charge;
 	double candidate_chi2pid;
@@ -251,6 +251,8 @@ int LTCCefficiency(){
 	treeHisto->Branch("costheta",&costheta,"costheta/D");
 	treeHisto->Branch("x",&x_false,"x/D");
 	treeHisto->Branch("y",&y_false,"y/D");
+	treeHisto->Branch("X",&candidate_X,"X/D");
+	treeHisto->Branch("Y",&candidate_Y,"Y/D");
 	treeHisto->Branch("nphe",&candidate_Nphe,"nphe/D");
 	treeHisto->Branch("mm",&missing_mass,"mm/D");
 	treeHisto->Branch("charge",&candidate_charge,"charge/D");
@@ -357,6 +359,8 @@ int LTCCefficiency(){
 			y_false = sin(candidate_theta/rad_deg)*sin(candidate_phi/rad_deg);
 			costheta = cos(candidate_theta/rad_deg);
 			candidate_Nphe = (*candidate)->che(LTCC)->getNphe();
+			candidate_X = (*candidate)->traj(LTCC,1)->getX();
+			candidate_Y = (*candidate)->traj(LTCC,1)->getY();
 
 			//Fill the TTree
 			treeHisto->Fill();

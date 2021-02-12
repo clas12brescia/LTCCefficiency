@@ -3,4 +3,4 @@
 *.so
 *.pcm
 *.ipynb_checkpoints
-
+.git

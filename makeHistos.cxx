@@ -28,8 +28,8 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	double max[4]={10,40,200,1};
 	//ranges for 2D-histograms variables pairs:
 	// (x,y), (theta, phi), (costheta, phi), (P, costheta)
-	double inf2[4][2]={{-0.8,-0.7},{0,-200},{0.8,-200},{0,0.8}};
-	double max2[4][2]={{0.5,0.7},{40,200},{1,200},{10,1}};
+	double inf2[4][2]={{-500,-500},{0,-200},{0.8,-200},{0,0.8}};
+	double max2[4][2]={{500,500},{40,200},{1,200},{10,1}};
 	//customize the binning of the histograms
 	// P, theta, phi, costheta
 //double bins[4]={20,20,20,20};
@@ -39,7 +39,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	//title of axes, variables and variables pairs
 	string var[6]={"P(GeV/c)","#theta(deg)","#phi(deg)","cos(#theta)(#)"};
 	string varsToProject[4] = {"P", "theta", "phi", "costheta"};
-	string pair[4][2]={{"y:x","x(#); y(#)"},{"phi:theta","#theta(deg); #phi(deg)"},{"phi:costheta","cos#theta(#); #phi(deg)"},{"costheta:P","P(GeV/c); cos#theta(#)"}};
+	string pair[4][2]={{"Y:X","x(cm); y(cm)"},{"phi:theta","#theta(deg); #phi(deg)"},{"phi:costheta","cos#theta(#); #phi(deg)"},{"costheta:P","P(GeV/c); cos#theta(#)"}};
 	
 	//create histograms arrays with ranges and title defined before
 	for(int j=0; j<4; j++){
@@ -83,32 +83,32 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	for(int j=0; j<4;j++){ 
 		//1D
 		hrt[j] = (TH1F*) hsel_1[j]->Clone(Form("hrt%d",j+1));
-		hrt[j]->SetTitle(Form("Ratio of candidates in sector 3 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
+		hrt[j]->SetTitle(Form("Efficiency in sector 3 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
 		hrt[j]->SetStats(0);
 		hrt[j]->Divide(htot[j]);
 
 		hrt[j+4] = (TH1F*) hsel_2[j]->Clone(Form("hrt%d",j+5));
-		hrt[j+4]->SetTitle(Form("Ratio of candidates in sector 3 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
+		hrt[j+4]->SetTitle(Form("Efficiency in sector 3 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
 		hrt[j+4]->SetStats(0);
 		hrt[j+4]->Divide(htot[j]);
 
 		hrt[j+8] = (TH1F*) hsel_1[j+4]->Clone(Form("hrt%d",j+9));
-		hrt[j+8]->SetTitle(Form("Ratio of candidates in sector 5 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
+		hrt[j+8]->SetTitle(Form("Efficiency in sector 5 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
 		hrt[j+8]->SetStats(0);
 		hrt[j+8]->Divide(htot[j+4]);
 
 		hrt[j+12] = (TH1F*) hsel_2[j+4]->Clone(Form("hrt%d",j+13));
-		hrt[j+12]->SetTitle(Form("Ratio of candidates in sector 5 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
+		hrt[j+12]->SetTitle(Form("Efficiency in sector 5 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
 		hrt[j+12]->SetStats(0);
 		hrt[j+12]->Divide(htot[j+4]);
 		//2D
 		hrt2[j] = (TH2F*) hsel2[j]->Clone(Form("hrt2%d",j+1));
-		hrt2[j]->SetTitle(Form("Ratio of candidates in sector 3 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()));
+		hrt2[j]->SetTitle(Form("Efficiency in sector 3 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()));
 		hrt2[j]->SetStats(0);
 		hrt2[j]->Divide(htot2[j]);
 
 		hrt2[j+4] = (TH2F*) hsel2[j+4]->Clone(Form("hrt2%d",j+5));
-		hrt2[j+4]->SetTitle(Form("Ratio of candidates in sector 5 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()));
+		hrt2[j+4]->SetTitle(Form("Efficiency in sector 5 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()));
 		hrt2[j+4]->SetStats(0);
 		hrt2[j+4]->Divide(htot2[j+4]);
 	}
