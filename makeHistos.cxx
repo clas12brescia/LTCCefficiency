@@ -8,6 +8,7 @@ root -l 'makeHistos.cxx("tree_filename.root")'
 if you named this file differently from the default value.
 */
 
+// Convert a TH2F in a polar histogram with the correct axes system
 void SetToPolar(TH2F* h, TCanvas* c);
 
 void makeHistos(string treeFile="LTCCefficiency_tree.root"){
@@ -84,9 +85,11 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	}
 	
 	//3D
+	// sector 3
 	treeHisto->Project("ht3D1","phi:theta:P","abs(chi2pid)<3 && status>2109 && y>0");
-	treeHisto->Project("ht3D2","phi:theta:P","abs(chi2pid)<3 && status>2109 && y<0");
 	treeHisto->Project("hs3D1","phi:theta:P","abs(chi2pid)<3 && status>2109 && nphe>2 && y>0");
+	// sector 5
+	treeHisto->Project("ht3D2","phi:theta:P","abs(chi2pid)<3 && status>2109 && y<0");
 	treeHisto->Project("hs3D2","phi:theta:P","abs(chi2pid)<3 && status>2109 && nphe>2 && y<0");
 
 	//define histograms arrays for efficiency (ratio total/selected)
@@ -95,50 +98,55 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	TH3F * hrt3D[2];
 
 	//create the ratio histograms
-	for(int j=0; j<4;j++){ 
+	for(int j=0; j<4; j++){ 
 		//1D
+		// sector 3
+		//// nphe>1
 		hrt[j] = (TH1F*) hsel_1[j]->Clone(Form("hrt%d",j+1));
 		hrt[j]->SetTitle(Form("Efficiency in sector 3 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
 		hrt[j]->SetStats(0);
 		hrt[j]->Divide(htot[j]);
-
+		//// nphe>2
 		hrt[j+4] = (TH1F*) hsel_2[j]->Clone(Form("hrt%d",j+5));
 		hrt[j+4]->SetTitle(Form("Efficiency in sector 3 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
 		hrt[j+4]->SetStats(0);
 		hrt[j+4]->Divide(htot[j]);
-
+		// sector 5
+		//// nphe>1
 		hrt[j+8] = (TH1F*) hsel_1[j+4]->Clone(Form("hrt%d",j+9));
 		hrt[j+8]->SetTitle(Form("Efficiency in sector 5 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
 		hrt[j+8]->SetStats(0);
 		hrt[j+8]->Divide(htot[j+4]);
-
+		//// nphe>2
 		hrt[j+12] = (TH1F*) hsel_2[j+4]->Clone(Form("hrt%d",j+13));
 		hrt[j+12]->SetTitle(Form("Efficiency in sector 5 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()));
 		hrt[j+12]->SetStats(0);
 		hrt[j+12]->Divide(htot[j+4]);
 		//2D
+		// sector 3
 		hrt2[j] = (TH2F*) hsel2[j]->Clone(Form("hrt2%d",j+1));
 		hrt2[j]->SetTitle(Form("Efficiency in sector 3 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()));
 		hrt2[j]->SetStats(0);
 		hrt2[j]->Divide(htot2[j]);
-
+		// sector 5
 		hrt2[j+4] = (TH2F*) hsel2[j+4]->Clone(Form("hrt2%d",j+5));
 		hrt2[j+4]->SetTitle(Form("Efficiency in sector 5 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()));
 		hrt2[j+4]->SetStats(0);
 		hrt2[j+4]->Divide(htot2[j+4]);
 	}
 	//3D
+	// sector 3
 	hrt3D[0] = (TH3F*) hsel3D[0]->Clone("hrt3D1");
 	hrt3D[0]->SetTitle("Efficiency in sectors 3 [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)");
 	hrt3D[0]->SetStats(0);
 	hrt3D[0]->Divide(htot3D[0]);
-	
+	// sector 5
 	hrt3D[1] = (TH3F*) hsel3D[1]->Clone("hrt3D2");
 	hrt3D[1]->SetTitle("Efficiency in sectors 5 [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)");
 	hrt3D[1]->SetStats(0);
 	hrt3D[1]->Divide(htot3D[1]);
 	
-	//name the ouput file
+	// name the ouput file
 	string output = treeFile;
 	output.erase(output.begin(),output.begin()+20);
 	output.erase(output.end()-5,output.end());
@@ -213,7 +221,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		can[k+4]->Divide(2,2);
 		can[k+4]->cd(1);
 		htot235[k]->Draw(option.c_str());
-		if(k==1) SetToPolar(htot235[k],can[k+4]);
+		if(k==1) SetToPolar(htot235[k],can[k+4]); //for theta:phi plots->polar coordinates
 		can[k+4]->cd(2);
 		hsel235[k]->Draw(option.c_str());
 		if(k==1) SetToPolar(hsel235[k],can[k+4]);
@@ -228,11 +236,13 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 
 	}
 	
+	// save in a two file the table (P,theta,phi,efficiency)
+	// the center of P, theta and phi bins is saved
 	ofstream fout("P_theta_phi_efficiency_s3.dat");
 	ofstream pout("P_theta_phi_efficiency_s5.dat");
-	for(int i=0; i<12; i++){
-		for(int j=0; j<10; j++){
-			for(int k=0; k<50; k++){
+	for(int i=0; i<hrt3D[0]->GetNbinsX(); i++){// loop over bins of P
+		for(int j=0; j<hrt3D[0]->GetNbinsY(); j++){// loop over bins of theta
+			for(int k=0; k<hrt3D[0]->GetNbinsZ(); k++){// loop over bins of phi
 				fout<<hrt3D[0]->GetXaxis()->GetBinCenter(i);
 				fout<<"\t"<<hrt3D[0]->GetYaxis()->GetBinCenter(j);
 				fout<<"\t"<<hrt3D[0]->GetZaxis()->GetBinCenter(k);
@@ -240,9 +250,9 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 			}
 		}
 	}
-	for(int i=0; i<12; i++){
-		for(int j=0; j<10; j++){
-			for(int k=0; k<50; k++){
+	for(int i=0; i<hrt3D[1]->GetNbinsX(); i++){
+		for(int j=0; j<hrt3D[1]->GetNbinsY(); j++){
+			for(int k=0; k<hrt3D[1]->GetNbinsZ(); k++){
 				pout<<hrt3D[1]->GetXaxis()->GetBinCenter(i);
 				pout<<"\t"<<hrt3D[1]->GetYaxis()->GetBinCenter(j);
 				pout<<"\t"<<hrt3D[1]->GetZaxis()->GetBinCenter(k);
@@ -250,6 +260,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 			}
 		}
 	}
+	
 	//save the canvases in a unique pdf file
 	//one canvas for each page
 	can[0]->SaveAs(Form("out_%s.pdf(",output.c_str())); // <-- first page
@@ -268,6 +279,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 }
 
 void SetToPolar(TH2F* h, TCanvas* c){
+	// hide the cartesian axes system
 	h->GetXaxis()->SetLabelOffset(999);
 	h->GetXaxis()->SetLabelSize(0);
 	h->SetAxisColor(kWhite,"x");
@@ -279,14 +291,19 @@ void SetToPolar(TH2F* h, TCanvas* c){
 	h->SetAxisColor(kWhite,"y");
 	h->GetYaxis()->SetTickLength(0);
 	h->GetYaxis()->SetTitle("");
+	// save min and max value of theta
 	double ymax = h->GetYaxis()->GetXmax();
 	double ymin = h->GetYaxis()->GetXmin();
 
-	TGraphPolargram* gp = new 
-	TGraphPolargram("gp",ymin,ymax,0,360);
+	// create a TGraphPolargram
+	// radial: theta, polar: phi
+	TGraphPolargram* gp = new TGraphPolargram("gp",ymin,ymax,0,360);
+	gp->SetToDegree();
 	gp->SetNdivPolar(6);
 	gp->SetNdivRadial(4);
-	gp->SetToDegree();
+	gp->SetPolarLabelFont(42);
+	gp->SetRadialLabelFont(42);
 	gp->Draw();
+	c->Modified();
 	c->Update();
 }
