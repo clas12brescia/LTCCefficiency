@@ -46,7 +46,7 @@ This file can be created using the command:
 ```bash
 ls -1 /directory/of/hipo/files/*.hipo > input_filename.dat
 ```
-that put the paths of all hipo files present in the directory.
+that put the paths of all hipo files present in the directory (if the run list is too long an *Argument list too long* error can be avoided [using find instead of ls](./using_find_instead_of_ls.md)).
 
 
 After the run finishes, the histograms can be found in the root file `out_LTCCefficiency.root`.
