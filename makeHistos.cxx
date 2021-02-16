@@ -9,7 +9,7 @@ if you named this file differently from the default value.
 */
 
 // Convert a TH2F in a polar histogram with the correct axes system
-void SetToPolar(TH2F* h, TCanvas* c);
+//void SetToPolar(TH2F* h, TCanvas* c);
 
 void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	//read the TTree from root file created by LTCCefficiency.cxx
@@ -27,70 +27,82 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	TH3F * hsel3D[2];
 	//min and max of ranges for variables:
 	// P, theta, phi, costheta
-	double inf[4]={0,0,-200,0.8};
-	double max[4]={10,40,200,1};
+	double inf[4]={0,0,-180,0.8};
+	double max[4]={10,40,180,1};
 	//ranges for 2D-histograms variables pairs:
 	// (x,y), (theta, phi), (costheta, phi), (P, costheta)
-	double inf2[4][2]={{-500,-500},{-200,0},{0.8,-200},{0,0.8}};
-	double max2[4][2]={{500,500},{200,40},{1,200},{10,1}};
+	double inf2[4][2]={{-500,-500},{-180,0},{0.8,-180},{0,0.8}};
+	double max2[4][2]={{500,500},{180,40},{1,180},{10,1}};
 	//customize the binning of the histograms
 	// P, theta, phi, costheta
-	//double bins[4]={20,20,20,20};
+	int bins[4]={20,20,50,20};
 	// (x,y), (theta, phi), (costheta, phi), (P, costheta)
-	//double bins[4][2]={{20,20},{20,20},{20,20},{20,20}};
+	int bins2[4][2]={{20,20},{50,20},{20,50},{20,20}};
 	
+	// set useful aliases for histograms
+	treeHisto->SetAlias("r","X*X+Y*Y+Z*Z");
+	treeHisto->SetAlias("theta","acos(Z/r)*180/TMath::Pi()");
+	treeHisto->SetAlias("phi","asin(Y/X)*180/TMath::Pi()");
+	treeHisto->SetAlias("costheta","cos(theta)");
 	//title of axes, variables and variables pairs
 	string var[6]={"P(GeV/c)","#theta(deg)","#phi(deg)","cos(#theta)(#)"};
 	string varsToProject[4] = {"P", "theta", "phi", "costheta"};
-	string pair[4][2]={{"Y:X","x(cm); y(cm)"},{"theta:phi","#phi(deg);#theta(deg)"},{"phi:costheta","cos#theta(#); #phi(deg)"},{"costheta:P","P(GeV/c); cos#theta(#)"}};
+	string pair[4][2]={{"Y:X","x(cm); y(cm)"},{"phi:theta","#theta(deg); #phi(deg)"},{"phi:costheta","cos#theta(#); #phi(deg)"},{"costheta:P","P(GeV/c); cos#theta(#)"}};
 	
 	//create histograms arrays with ranges and title defined before
 	for(int j=0; j<4; j++){
-		htot[j] = new TH1F(Form("ht%d",j+1),Form("Candidates in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
-		hsel_1[j] = new TH1F(Form("hs1%d",j+1),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
-		htot[j+4] = new TH1F(Form("ht%d",j+5),Form("Candidates in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
-		hsel_1[j+4] = new TH1F(Form("hs1%d",j+5),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
-		hsel_2[j] = new TH1F(Form("hs2%d",j+1),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
-		hsel_2[j+4] = new TH1F(Form("hs2%d",j+5),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),20,inf[j],max[j]);
-		htot2[j] = new TH2F(Form("h2%d",j+1),Form("Candidates in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),20,inf2[j][0],max2[j][0],20,inf2[j][1],max2[j][1]);
-		hsel2[j] = new TH2F(Form("h2%d",j+5),Form("Candidate hits in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),20,inf2[j][0],max2[j][0],20,inf2[j][1],max2[j][1]);
-		htot2[j+4] = new TH2F(Form("h2%d",j+9),Form("Candidates in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),20,inf2[j][0],max2[j][0],20,inf2[j][1],max2[j][1]);
-		hsel2[j+4] = new TH2F(Form("h2%d",j+13),Form("Candidate hits in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),20,inf2[j][0],max2[j][0],20,inf2[j][1],max2[j][1]);
+		htot[j] = new TH1F(Form("ht%d",j+1),Form("Candidates in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],inf[j],max[j]);
+		hsel_1[j] = new TH1F(Form("hs1%d",j+1),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],inf[j],max[j]);
+		htot[j+4] = new TH1F(Form("ht%d",j+5),Form("Candidates in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],inf[j],max[j]);
+		hsel_1[j+4] = new TH1F(Form("hs1%d",j+5),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],inf[j],max[j]);
+		hsel_2[j] = new TH1F(Form("hs2%d",j+1),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],inf[j],max[j]);
+		hsel_2[j+4] = new TH1F(Form("hs2%d",j+5),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],inf[j],max[j]);
+		htot2[j] = new TH2F(Form("h2%d",j+1),Form("Candidates in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2[j][0],max2[j][0],bins2[j][1],inf2[j][1],max2[j][1]);
+		hsel2[j] = new TH2F(Form("h2%d",j+5),Form("Candidate hits in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2[j][0],max2[j][0],bins2[j][1],inf2[j][1],max2[j][1]);
+		htot2[j+4] = new TH2F(Form("h2%d",j+9),Form("Candidates in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2[j][0],max2[j][0],bins2[j][1],inf2[j][1],max2[j][1]);
+		hsel2[j+4] = new TH2F(Form("h2%d",j+13),Form("Candidate hits in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2[j][0],max2[j][0],bins2[j][1],inf2[j][1],max2[j][1]);
 	}
 
-	htot3D[0] = new TH3F("ht3D1","Candidates in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",12,2.5,8.5,10,0,40,50,0,200);
-	hsel3D[0] = new TH3F("hs3D1","Candidate hits in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",12,2.5,8.5,10,0,40,50,0,200);
-	htot3D[1] = new TH3F("ht3D2","Candidates in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",12,2.5,8.5,10,0,40,50,-200,0);
-	hsel3D[1] = new TH3F("hs3D2","Candidate hits in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",12,2.5,8.5,10,0,40,50,-200,0);
-
+	htot3D[0] = new TH3F("ht3D1","Candidates in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",12,2.5,8.5,10,0,40,45,0,180);
+	hsel3D[0] = new TH3F("hs3D1","Candidate hits in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",12,2.5,8.5,10,0,40,45,0,180);
+	htot3D[1] = new TH3F("ht3D2","Candidates in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",12,2.5,8.5,10,0,40,45,-180,0);
+	hsel3D[1] = new TH3F("hs3D2","Candidate hits in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",12,2.5,8.5,10,0,40,45,-180,0);
+	
+	// set aliases for histograms' conditions
+	treeHisto->SetAlias("S3","abs(chi2pid)<3 && status>2109 && Y>0");
+	treeHisto->SetAlias("S3N1","abs(chi2pid)<3 && status>2109 && Y>0 && nphe>1");
+	treeHisto->SetAlias("S3N2","abs(chi2pid)<3 && status>2109 && Y>0 && nphe>2");
+	treeHisto->SetAlias("S5","abs(chi2pid)<3 && status>2109 && Y<0");
+	treeHisto->SetAlias("S5N1","abs(chi2pid)<3 && status>2109 && Y<0 && nphe>1");
+	treeHisto->SetAlias("S5N2","abs(chi2pid)<3 && status>2109 && Y<0 && nphe>2");
 	//fill the histograms arrays with the tree branches
 	for(int j=0; j<4; j++){
 		//1D
 		// sector 3
-		treeHisto->Project(Form("ht%d",j+1), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2109 && y>0");
-		treeHisto->Project(Form("hs1%d",j+1), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2109 && y>0 && nphe>1");	//condition on photoelectrons
-		treeHisto->Project(Form("hs2%d",j+1), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2109 && y>0 && nphe>2");	//condition on photoelectrons
+		treeHisto->Project(Form("ht%d",j+1), varsToProject[j].c_str(), "S3");
+		treeHisto->Project(Form("hs1%d",j+1), varsToProject[j].c_str(), "S3N1");	//condition on photoelectrons
+		treeHisto->Project(Form("hs2%d",j+1), varsToProject[j].c_str(), "S3N2");	//condition on photoelectrons
 		// sector 5
-		treeHisto->Project(Form("ht%d",j+5), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2109 && y<0");
-		treeHisto->Project(Form("hs1%d",j+5), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2109 && y<0 && nphe>1");	//condition on photoelectrons
-		treeHisto->Project(Form("hs2%d",j+5), varsToProject[j].c_str(), "abs(chi2pid)<3 && status>2109 && y<0 && nphe>2");	//condition on photoelectrons
+		treeHisto->Project(Form("ht%d",j+5), varsToProject[j].c_str(), "S5");
+		treeHisto->Project(Form("hs1%d",j+5), varsToProject[j].c_str(), "S5N1");	//condition on photoelectrons
+		treeHisto->Project(Form("hs2%d",j+5), varsToProject[j].c_str(), "S5N2");	//condition on photoelectrons
 
 		//2D
 		// sector 3
-		treeHisto->Project(Form("h2%d",j+1), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2109 && y>0");
-		treeHisto->Project(Form("h2%d",j+5), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2109 && nphe>2 && y>0");	//condition on photoelectrons
+		treeHisto->Project(Form("h2%d",j+1), pair[j][0].c_str(),"S3");
+		treeHisto->Project(Form("h2%d",j+5), pair[j][0].c_str(),"S3N2");	//condition on photoelectrons
 		// sector 5
-		treeHisto->Project(Form("h2%d",j+9), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2109 && y<0");
-		treeHisto->Project(Form("h2%d",j+13), pair[j][0].c_str(),"abs(chi2pid)<3 && status>2109 && nphe>2 && y<0");
+		treeHisto->Project(Form("h2%d",j+9), pair[j][0].c_str(),"S5");
+		treeHisto->Project(Form("h2%d",j+13), pair[j][0].c_str(),"S5N2");
 	}
 	
 	//3D
 	// sector 3
-	treeHisto->Project("ht3D1","phi:theta:P","abs(chi2pid)<3 && status>2109 && y>0");
-	treeHisto->Project("hs3D1","phi:theta:P","abs(chi2pid)<3 && status>2109 && nphe>2 && y>0");
+	treeHisto->Project("ht3D1","phi:theta:P","S3");
+	treeHisto->Project("hs3D1","phi:theta:P","S3N2");
 	// sector 5
-	treeHisto->Project("ht3D2","phi:theta:P","abs(chi2pid)<3 && status>2109 && y<0");
-	treeHisto->Project("hs3D2","phi:theta:P","abs(chi2pid)<3 && status>2109 && nphe>2 && y<0");
+	treeHisto->Project("ht3D2","phi:theta:P","S5");
+	treeHisto->Project("hs3D2","phi:theta:P","S5N2");
 
 	//define histograms arrays for efficiency (ratio total/selected)
 	TH1F * hrt[16];
@@ -211,26 +223,22 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 
 		//2D (from can2_0 to can2_3)
 		string option;
-		if(k==1){
-			option="CONT4Z POL";
-		}
-		else{
-			option="CONT4Z";
-		}
+		option="CONT4Z";
+
 		can[k+4] = new TCanvas(Form("can2_%d",k),Form("can2_%d",k),800,800);
 		can[k+4]->Divide(2,2);
 		can[k+4]->cd(1);
 		htot235[k]->Draw(option.c_str());
-		if(k==1) SetToPolar(htot235[k],can[k+4]); //for theta:phi plots->polar coordinates
+//		if(k==1) SetToPolar(htot235[k],can[k+4]); //for theta:phi plots->polar coordinates
 		can[k+4]->cd(2);
 		hsel235[k]->Draw(option.c_str());
-		if(k==1) SetToPolar(hsel235[k],can[k+4]);
+//		if(k==1) SetToPolar(hsel235[k],can[k+4]);
 		can[k+4]->cd(3);
 		hrt2[k]->Draw(option.c_str());
-		if(k==1) SetToPolar(hrt2[k],can[k+4]);
+//		if(k==1) SetToPolar(hrt2[k],can[k+4]);
 		can[k+4]->cd(4);
 		hrt2[k+4]->Draw(option.c_str());
-		if(k==1) SetToPolar(hrt2[k+4],can[k+4]);
+//		if(k==1) SetToPolar(hrt2[k+4],can[k+4]);
 
 		can[k+4]->Write();
 
@@ -278,32 +286,32 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 
 }
 
-void SetToPolar(TH2F* h, TCanvas* c){
-	// hide the cartesian axes system
-	h->GetXaxis()->SetLabelOffset(999);
-	h->GetXaxis()->SetLabelSize(0);
-	h->SetAxisColor(kWhite,"x");
-	h->GetXaxis()->SetTickLength(0);
-	h->GetXaxis()->SetTitle("");
-	
-	h->GetYaxis()->SetLabelOffset(999);
-	h->GetYaxis()->SetLabelSize(0);
-	h->SetAxisColor(kWhite,"y");
-	h->GetYaxis()->SetTickLength(0);
-	h->GetYaxis()->SetTitle("");
-	// save min and max value of theta
-	double ymax = h->GetYaxis()->GetXmax();
-	double ymin = h->GetYaxis()->GetXmin();
-
-	// create a TGraphPolargram
-	// radial: theta, polar: phi
-	TGraphPolargram* gp = new TGraphPolargram("gp",ymin,ymax,0,360);
-	gp->SetToDegree();
-	gp->SetNdivPolar(6);
-	gp->SetNdivRadial(4);
-	gp->SetPolarLabelFont(42);
-	gp->SetRadialLabelFont(42);
-	gp->Draw();
-	c->Modified();
-	c->Update();
-}
+//void SetToPolar(TH2F* h, TCanvas* c){
+//	// hide the cartesian axes system
+//	h->GetXaxis()->SetLabelOffset(999);
+//	h->GetXaxis()->SetLabelSize(0);
+//	h->SetAxisColor(kWhite,"x");
+//	h->GetXaxis()->SetTickLength(0);
+//	h->GetXaxis()->SetTitle("");
+//	
+//	h->GetYaxis()->SetLabelOffset(999);
+//	h->GetYaxis()->SetLabelSize(0);
+//	h->SetAxisColor(kWhite,"y");
+//	h->GetYaxis()->SetTickLength(0);
+//	h->GetYaxis()->SetTitle("");
+//	// save min and max value of theta
+//	double ymax = h->GetYaxis()->GetXmax();
+//	double ymin = h->GetYaxis()->GetXmin();
+//
+//	// create a TGraphPolargram
+//	// radial: theta, polar: phi
+//	TGraphPolargram* gp = new TGraphPolargram("gp",ymin,ymax,0,360);
+//	gp->SetToDegree();
+//	gp->SetNdivPolar(6);
+//	gp->SetNdivRadial(4);
+//	gp->SetPolarLabelFont(42);
+//	gp->SetRadialLabelFont(42);
+//	gp->Draw();
+//	c->Modified();
+//	c->Update();
+//}

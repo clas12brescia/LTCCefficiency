@@ -239,20 +239,16 @@ int LTCCefficiency(){
 	
 	double candidate_P, candidate_theta, candidate_phi;
 	double costheta;
-	double x_false, y_false, candidate_X, candidate_Y;
+	double x_false, y_false, candidate_X, candidate_Y, candidate_Z;
 	double candidate_Nphe;
 	double missing_mass, candidate_charge;
 	double candidate_chi2pid;
 	int candidate_status;
 	//Branches of TTree
 	treeHisto->Branch("P",&candidate_P,"P/D");
-	treeHisto->Branch("theta",&candidate_theta,"theta/D");
-	treeHisto->Branch("phi",&candidate_phi,"phi/D");
-	treeHisto->Branch("costheta",&costheta,"costheta/D");
-	treeHisto->Branch("x",&x_false,"x/D");
-	treeHisto->Branch("y",&y_false,"y/D");
 	treeHisto->Branch("X",&candidate_X,"X/D");
 	treeHisto->Branch("Y",&candidate_Y,"Y/D");
+	treeHisto->Branch("Z",&candidate_Z,"Z/D");
 	treeHisto->Branch("nphe",&candidate_Nphe,"nphe/D");
 	treeHisto->Branch("mm",&missing_mass,"mm/D");
 	treeHisto->Branch("charge",&candidate_charge,"charge/D");
@@ -353,14 +349,10 @@ int LTCCefficiency(){
 
 			// survived candidates variables
       candidate_P = (*candidate)->getP();
-			candidate_theta = ((*candidate)->getTheta())*rad_deg;
-			candidate_phi = ((*candidate)->getPhi())*rad_deg;
-			x_false = sin(candidate_theta/rad_deg)*cos(candidate_phi/rad_deg);
-			y_false = sin(candidate_theta/rad_deg)*sin(candidate_phi/rad_deg);
-			costheta = cos(candidate_theta/rad_deg);
 			candidate_Nphe = (*candidate)->che(LTCC)->getNphe();
 			candidate_X = (*candidate)->traj(LTCC,1)->getX();
 			candidate_Y = (*candidate)->traj(LTCC,1)->getY();
+			candidate_Z = (*candidate)->traj(LTCC,1)->getZ();
 
 			//Fill the TTree
 			treeHisto->Fill();
