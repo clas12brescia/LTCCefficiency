@@ -31,23 +31,23 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	double max[4]={10,40,180,1};
 	//ranges for 2D-histograms variables pairs:
 	// (x,y), (theta, phi), (costheta, phi), (P, costheta)
-	double inf2[4][2]={{-500,-500},{-180,0},{0.8,-180},{0,0.8}};
-	double max2[4][2]={{500,500},{180,40},{1,180},{10,1}};
+	double inf2[4][2]={{-500,-500},{0,-180},{0.8,-180},{0,0.8}};
+	double max2[4][2]={{500,500},{40,180},{1,180},{10,1}};
 	//customize the binning of the histograms
 	// P, theta, phi, costheta
-	int bins[4]={20,20,50,20};
+	int bins[4]={20,20,45,20};
 	// (x,y), (theta, phi), (costheta, phi), (P, costheta)
-	int bins2[4][2]={{20,20},{50,20},{20,50},{20,20}};
+	int bins2[4][2]={{50,50},{20,45},{20,45},{20,20}};
 	
 	// set useful aliases for histograms
-	treeHisto->SetAlias("r","X*X+Y*Y+Z*Z");
-	treeHisto->SetAlias("theta","acos(Z/r)*180/TMath::Pi()");
-	treeHisto->SetAlias("phi","asin(Y/X)*180/TMath::Pi()");
-	treeHisto->SetAlias("costheta","cos(theta)");
+	treeHisto->SetAlias("R","sqrt(X*X+Y*Y+Z*Z)");
+	treeHisto->SetAlias("theta","acos(Z/R)*180/TMath::Pi()");
+	treeHisto->SetAlias("phi","atan(Y/X)*180/TMath::Pi()");
+	treeHisto->SetAlias("costheta","cos(theta*TMath::Pi()/180)");
 	//title of axes, variables and variables pairs
 	string var[6]={"P(GeV/c)","#theta(deg)","#phi(deg)","cos(#theta)(#)"};
 	string varsToProject[4] = {"P", "theta", "phi", "costheta"};
-	string pair[4][2]={{"Y:X","x(cm); y(cm)"},{"phi:theta","#theta(deg); #phi(deg)"},{"phi:costheta","cos#theta(#); #phi(deg)"},{"costheta:P","P(GeV/c); cos#theta(#)"}};
+	string pair[4][2]={{"Y:X","x(cm); y(cm)"},{"phi:theta","#theta(deg); #phi(deg)"},{"phi:costheta","cos#theta; #phi(deg)"},{"costheta:P","P(GeV/c); cos#theta"}};
 	
 	//create histograms arrays with ranges and title defined before
 	for(int j=0; j<4; j++){
@@ -69,12 +69,12 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	hsel3D[1] = new TH3F("hs3D2","Candidate hits in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",12,2.5,8.5,10,0,40,45,-180,0);
 	
 	// set aliases for histograms' conditions
-	treeHisto->SetAlias("S3","abs(chi2pid)<3 && status>2109 && Y>0");
-	treeHisto->SetAlias("S3N1","abs(chi2pid)<3 && status>2109 && Y>0 && nphe>1");
-	treeHisto->SetAlias("S3N2","abs(chi2pid)<3 && status>2109 && Y>0 && nphe>2");
-	treeHisto->SetAlias("S5","abs(chi2pid)<3 && status>2109 && Y<0");
-	treeHisto->SetAlias("S5N1","abs(chi2pid)<3 && status>2109 && Y<0 && nphe>1");
-	treeHisto->SetAlias("S5N2","abs(chi2pid)<3 && status>2109 && Y<0 && nphe>2");
+	treeHisto->SetAlias("S3","abs(chi2pid)<3 && status>2109 && Y>0 && charge==1");
+	treeHisto->SetAlias("S3N1","abs(chi2pid)<3 && status>2109 && Y>0 && nphe>1 && charge==1");
+	treeHisto->SetAlias("S3N2","abs(chi2pid)<3 && status>2109 && Y>0 && nphe>2 && charge==1");
+	treeHisto->SetAlias("S5","abs(chi2pid)<3 && status>2109 && Y<0 && charge==1");
+	treeHisto->SetAlias("S5N1","abs(chi2pid)<3 && status>2109 && Y<0 && nphe>1 && charge==1");
+	treeHisto->SetAlias("S5N2","abs(chi2pid)<3 && status>2109 && Y<0 && nphe>2 && charge==1");
 	//fill the histograms arrays with the tree branches
 	for(int j=0; j<4; j++){
 		//1D
