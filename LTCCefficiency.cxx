@@ -44,8 +44,6 @@ For more details on this macro, see `README.md`.
 
 using namespace clas12;
 
-const double rad_deg = 57.2958;
-
 //////////////////////////////////////////////////////////
 // For more detailed descriptions of the classes below	//
 // see 'classes_description.md'													//
@@ -136,8 +134,8 @@ class Filtered_Loop_Cutoffs {
 public:
   int CutsOnMissingP(Filtered_Loop *IPL){
     int n = 0;
-    if (IPL->getMissingMass() < MM_min) n++;
-    if (IPL->getMissingMass() > MM_max) n++;
+//    if (IPL->getMissingMass() < MM_min) n++;
+//    if (IPL->getMissingMass() > MM_max) n++;
     if (IPL->getMissingEnergy() < IPL->getMissingMass() ) n++;
     return n;
   }  
@@ -238,8 +236,7 @@ int LTCCefficiency(){
 	TTree* treeHisto = new TTree("treeHisto","Variables to produce the desired histograms");
 	
 	double candidate_P, candidate_theta, candidate_phi;
-	double costheta;
-	double x_false, y_false, candidate_X, candidate_Y, candidate_Z;
+	double candidate_X, candidate_Y, candidate_Z;
 	double candidate_Nphe;
 	double missing_mass, candidate_charge;
 	double candidate_chi2pid;
@@ -249,6 +246,8 @@ int LTCCefficiency(){
 	treeHisto->Branch("X",&candidate_X,"X/D");
 	treeHisto->Branch("Y",&candidate_Y,"Y/D");
 	treeHisto->Branch("Z",&candidate_Z,"Z/D");
+	treeHisto->Branch("Theta",&candidate_theta,"Theta/D");
+	treeHisto->Branch("Phi",&candidate_phi,"Phi/D");
 	treeHisto->Branch("nphe",&candidate_Nphe,"nphe/D");
 	treeHisto->Branch("mm",&missing_mass,"mm/D");
 	treeHisto->Branch("charge",&candidate_charge,"charge/D");
@@ -353,6 +352,8 @@ int LTCCefficiency(){
 			candidate_X = (*candidate)->traj(LTCC,1)->getX();
 			candidate_Y = (*candidate)->traj(LTCC,1)->getY();
 			candidate_Z = (*candidate)->traj(LTCC,1)->getZ();
+			candidate_theta = (*candidate)->getTheta();
+			candidate_phi = (*candidate)->getPhi();
 
 			//Fill the TTree
 			treeHisto->Fill();
