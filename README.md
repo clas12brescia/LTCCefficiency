@@ -36,7 +36,7 @@ The cuts are applied after the creation of the TTree in the `makeHistos.cxx` mac
 
 For details on the meaning of these two parameters, see [CLAS12 DSTs](https://clasweb.jlab.org/wiki/index.php/CLAS12_DSTs#REC::Particle).
 
-![]{./fig/missing_mass_1-1.png}
+![](./fig/missing_mass_1-1.png)
 
 The candidated particles in this macro are identified **without** the use of PID. 
 Instead, they are selected using the following requests:
