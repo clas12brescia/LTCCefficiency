@@ -34,7 +34,7 @@ The cuts are applied after the creation of the TTree in the `makeHistos.cxx` mac
 * cut on status parameter that must be greater or equal to 2110;
 * cut on chi2pid parameter, which absolute value must be less than 3.
 
-For details on the meaning of these two parameters, see [CLAS12 DSTs]{https://clasweb.jlab.org/wiki/index.php/CLAS12_DSTs#REC::Particle}.
+For details on the meaning of these two parameters, see [CLAS12 DSTs](https://clasweb.jlab.org/wiki/index.php/CLAS12_DSTs#REC::Particle).
 
 ![]{./fig/missing_mass_1-1.png}
 
