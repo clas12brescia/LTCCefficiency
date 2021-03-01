@@ -16,22 +16,27 @@ For details on the reading method, see the following sections.
 
 ## How does the macro work?
 
-This macro reads a list of hipo files and saves the useful variables in a TTree, selecting events by filters and cuts.
+This macro reads a list of hipo files and saves the useful variables in a TTree, selecting events by some filters.
 The quantities of interest for this analysis are the following:
 
 * Momentum of the candidates (P, GeV/c);
-* Polar angle (&theta;, rad);
-* Azimuthal angle (&phi;, rad);
-* Cosine of the polar angle (cos(&theta;));
+* x/y coordinates in the detector coordinates system (X/Y, cm);
+* Polar angle at vertex (&theta;, deg);
+* Azimuthal angle at vertex (&phi; deg);
 * Number of photoelectrons in LTCC (N<sub>phe</sub>);
 * Missing mass (mm, GeV/c<sup>2</sup>).
 
 Cuts on kinetic variables are applied to obtain a clear missing mass peak and to select the events the most accurately possible.
 The events we are interested in are: e + p &rarr; &pi;<sup>+</sup> + n + *neutrals*.
-The cuts applied are:
+The cuts are applied after the creation of the TTree in the `makeHistos.cxx` macro and they are:
 
 * cut on missing mass (between 0.88 and 1 GeV), so that is near the neutron mass (~0.94 GeV);
-* cut on the polar angle of the transferred momentum: q<sub>t</sub>/q<sub>z</sub> > 0.12.
+* cut on status parameter that must be greater or equal to 2110;
+* cut on chi2pid parameter, which absolute value must be less than 3.
+
+For details on the meaning of these two parameters, see [CLAS12 DSTs]{https://clasweb.jlab.org/wiki/index.php/CLAS12_DSTs#REC::Particle}.
+
+![]{./fig/missing_mass_1-1.png}
 
 The candidated particles in this macro are identified **without** the use of PID. 
 Instead, they are selected using the following requests:
@@ -65,14 +70,15 @@ Run with:
 ```bash
 clas12root LTCCefficiency.cxx --in=input_filename.dat   
 ```
-where `input_filename.dat` contains the paths of the hipo files used for the analysis (see section *Note*).
+where `input_filename.dat` contains the paths of the hipo files used for the analysis (see section [Notes](#notes)).
 This file can be created using the command:
 ```bash
 ls -1 /directory/of/hipo/files/*.hipo > input_filename.dat
 ```
 that put the paths of all hipo files present in the directory.
 **IMPORTANT**: 
-The input file can also be a single .hipo file. For multiple hipo files reading, use only the method with the .dat/.txt file or modify the readfiles.cxx file with the method you prefer.
+The input file can also be a single hipo file. For multiple hipo files reading, use only the method with the .dat/.txt file or modify the 
+`readfiles.cxx` file with the method you prefer.
 
 
 After the run finishes, the TTree can be found in the root file `LTCCefficiency_tree_input_filename.root`.
@@ -90,27 +96,41 @@ For this purpose, two empty 1D-histograms (`hall` and `hnphe`) are present to be
 root -l 'makeHistos.cxx("LTCCefficiency_tree_input_filename.root")'
 ```
 
-A total of 8 canvases are created, each one composed by three 1D- or 2D-histograms:
+A total of 11 canvases are created, each one composed by four 1D- or 2D-histograms:
 1. The variable distribution for candidates in LTCC;
-1. The variable distribution for candidates with signal (i.e. N<sub>phe</sub>>1) in LTCC active sectors (3 and 5);
-1. The ratio between the previous two histograms (i.e. the efficiency).
+1. The variable distribution for candidates with signal in LTCC (i.e. N<sub>phe</sub>>1 or 2 in sectors 3 and 5);
+1. The efficiency in sector 3;
+1. The efficiency in sector 5.
  
 These canvases are saved in a ROOT and a pdf file named `out_input_filename.root/.pdf`.
-The histograms are the following:
+The six fundamental histograms for our analysis are the following:
 
-![](./fig/5run_can0-1.png)
-![](./fig/5run_can1-1.png)
-![](./fig/5run_can2-1.png)
-![](./fig/5run_can3-1.png)
-![](./fig/5run_can24-1.png)
-![](./fig/5run_can25-1.png)
-![](./fig/5run_can26-1.png)
-![](./fig/5run_can27-1.png)
+![](./fig/can0_P-1.png)
+![](./fig/can3_ThetaV-1.png)
+![](./fig/can4_PhiV-1.png)
+![](./fig/can2_0_XY-1.png)
+![](./fig/can2_2_ThetaVPhiV-1.png)
+![](./fig/can2_4_ThetaVP-1.png)
+
+Two 3D-tables are also saved in two different files, one per sector, named `P_theta_phi_efficiency_s3.txt` and `P_theta_phi_efficiency_s5.txt`. 
+This tables contain the central values of the bins for P, &theta;, &phi; variables and the associated efficiency for these values.
+
+### Tests on variables status and chi2pid
+
+To verify the effect of the cuts on parameters reported in the section [How does the macro work?](#how-does-the-macro-work), the makeHistos macro 
+produce also histograms of the variables P, ThetaV and PhiV, before and after the selection with the number of photoelectron varying the status and 
+the chi2pid values. 
+
+These plots are saved in a separated pdf file named `tests.pdf`.  
 
 ## Notes
 
-All the figures were obtained using this macro on a file list of 1038 hipo files (about 400 millions events).
-The hipo files used are from the first 5 spring2019 runs, directories 006616, 006618, 006619, 006620 and 006631. 
+All the figures were obtained using this macro on a file list of 121 hipo files (about 85 millions events).
+The hipo files used are from the spring 2019 runs, skim 13. These file can be found in `ifarm`:
 
-The complete list of this paths for all the file used in these macros can be found in the dat file `input_spring2019_first5run.dat`.
+/volatile/clas12/rg-a/production/recon/spring2019/torus-1/pass1/v0/dst/train/skim13/ 
+
+The complete list of this paths for all the file used in these macros can be found in the dat file `input_skim13_spring2019.dat`.
+A list of 1038 raw files (i.e. not filtered by the conditions of skim 13) can be found in `input_spring2019_first5run.dat` to test differences from 
+skim 13 files. 
 
