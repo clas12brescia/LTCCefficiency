@@ -1,6 +1,6 @@
 # Classes description
 
-Useful descriptions and comments about the classes used in the macro `LTCCefficiency.cxx` and `LTCCefficiency_PID.cxx`.
+Useful descriptions and comments about the classes used in the macro `LTCCefficiency.cxx`.
 
 ## Filtered_Particle
 
@@ -154,6 +154,8 @@ The applied cutoffs are:
 * Missing mass between 0.88 and 1 GeV;
 * Missing mass < Missing energy.
 
+The first one is commented in the present version of the code and implemented in the `makeHistos.cxx` macro.
+
 ```c++
 class Filtered_Loop_Cutoffs {
   const double MM_min = 0.88;
@@ -161,8 +163,8 @@ class Filtered_Loop_Cutoffs {
 public:
   int CutsOnMissingP(Filtered_Loop *IPL){
     int n = 0;
-    if (IPL->getMissingMass() < MM_min) n++;
-    if (IPL->getMissingMass() > MM_max) n++;
+//    if (IPL->getMissingMass() < MM_min) n++;
+//    if (IPL->getMissingMass() > MM_max) n++;
     if (IPL->getMissingEnergy() < IPL->getMissingMass() ) n++;
     return n;
   }  
@@ -189,9 +191,7 @@ instruction `c12.addAtLeastPid(...)` in LTCCefficiency(). This is the case in
 some of our codes but not all. 
 Care: by default (LTCC) this class requires the electron to be in FD but 
 out of LTCC, while the possible additional test particle must be in. Modify 
-this if you need them somewhere else. 
-Care: the electron cuts presently require the transferred momentum not 
-to be too beam-aligned. 
+this if you need them somewhere else.  
 
 ```c++
 class Starting_Cutoffs {
@@ -221,7 +221,7 @@ public:
     double qz = 10.2-pz;
     double q_ratio = pt/qz;
     //if (pt < pt_min) return 1;
-    if (q_ratio < min_q_angle) return 1;
+//    if (q_ratio < min_q_angle) return 1;
     return 0;
   }
   int CutsOnTestParticle(int pid){
