@@ -44,8 +44,6 @@ For more details on this macro, see `README.md`.
 
 using namespace clas12;
 
-const double rad_deg = 57.2958;
-
 //////////////////////////////////////////////////////////
 // For more detailed descriptions of the classes below	//
 // see 'classes_description.md'													//
@@ -136,8 +134,8 @@ class Filtered_Loop_Cutoffs {
 public:
   int CutsOnMissingP(Filtered_Loop *IPL){
     int n = 0;
-    if (IPL->getMissingMass() < MM_min) n++;
-    if (IPL->getMissingMass() > MM_max) n++;
+//    if (IPL->getMissingMass() < MM_min) n++;
+//    if (IPL->getMissingMass() > MM_max) n++;
     if (IPL->getMissingEnergy() < IPL->getMissingMass() ) n++;
     return n;
   }  
@@ -147,7 +145,7 @@ class Starting_Cutoffs {
   const int wanted_region = 2000;
   const int in_out_LTCC = -1; //0 = electron everywhere, +1 = in LTCC, -1 = out
   const double pt_min = 0.8; //alternative with the following
-  const double min_q_angle = 0.12;
+  const double min_q_angle = 0.;
   clas12reader *c12;
 public:
   Starting_Cutoffs(clas12reader *C12) {c12=C12;}
@@ -170,7 +168,7 @@ public:
     double qz = 10.2-pz;
     double q_ratio = pt/qz;
     //if (pt < pt_min) return 1;
-    if (q_ratio < min_q_angle) return 1;
+    //if (q_ratio < min_q_angle) return 1;
     return 0;
   }
   int CutsOnTestParticle(int pid){
@@ -238,20 +236,23 @@ int LTCCefficiency(){
 	TTree* treeHisto = new TTree("treeHisto","Variables to produce the desired histograms");
 	
 	double candidate_P, candidate_theta, candidate_phi;
-	double costheta;
-	double x_false, y_false;
+	double candidate_X, candidate_Y, candidate_Z;
 	double candidate_Nphe;
 	double missing_mass, candidate_charge;
+	double candidate_chi2pid;
+	int candidate_status;
 	//Branches of TTree
 	treeHisto->Branch("P",&candidate_P,"P/D");
-	treeHisto->Branch("theta",&candidate_theta,"theta/D");
-	treeHisto->Branch("phi",&candidate_phi,"phi/D");
-	treeHisto->Branch("costheta",&costheta,"costheta/D");
-	treeHisto->Branch("x",&x_false,"x/D");
-	treeHisto->Branch("y",&y_false,"y/D");
+	treeHisto->Branch("X",&candidate_X,"X/D");
+	treeHisto->Branch("Y",&candidate_Y,"Y/D");
+	treeHisto->Branch("Z",&candidate_Z,"Z/D");
+	treeHisto->Branch("Theta",&candidate_theta,"Theta/D");
+	treeHisto->Branch("Phi",&candidate_phi,"Phi/D");
 	treeHisto->Branch("nphe",&candidate_Nphe,"nphe/D");
 	treeHisto->Branch("mm",&missing_mass,"mm/D");
 	treeHisto->Branch("charge",&candidate_charge,"charge/D");
+	treeHisto->Branch("chi2pid",&candidate_chi2pid,"chi2pid/D");
+	treeHisto->Branch("status",&candidate_status,"status/I");
 	
 	//Useful histogram to use in interactive mode
 	TH1F *hall=new TH1F("hall","Candidate in LTCC; P(GeV/c)",100,0,10);
@@ -333,11 +334,13 @@ int LTCCefficiency(){
 			// determination of missing momentum and total final momentum
       loop.setLoop();
 
-			// calculate missing mass and fill the histogram
+			// calculate missing mass
       missing_mass = loop.getMissingMass();
 
-			// histogram of charge of candidates
+			// values of some useful candidates info (before missing mass cut)
       candidate_charge = (*candidate)->par()->getCharge();
+			candidate_chi2pid = (*candidate)->par()->getChi2Pid();
+			candidate_status = (*candidate)->par()->getStatus();
 
       // cuts on missing P variables:
 			// missing mass, missing energy > missing mass
@@ -345,12 +348,12 @@ int LTCCefficiency(){
 
 			// survived candidates variables
       candidate_P = (*candidate)->getP();
-			candidate_theta = ((*candidate)->getTheta());
-			candidate_phi = ((*candidate)->getPhi());
-			x_false = sin(candidate_theta)*cos(candidate_phi);
-			y_false = sin(candidate_theta)*sin(candidate_phi);
-			costheta = cos(candidate_theta);
 			candidate_Nphe = (*candidate)->che(LTCC)->getNphe();
+			candidate_X = (*candidate)->traj(LTCC,1)->getX();
+			candidate_Y = (*candidate)->traj(LTCC,1)->getY();
+			candidate_Z = (*candidate)->traj(LTCC,1)->getZ();
+			candidate_theta = (*candidate)->getTheta();
+			candidate_phi = (*candidate)->getPhi();
 
 			//Fill the TTree
 			treeHisto->Fill();
