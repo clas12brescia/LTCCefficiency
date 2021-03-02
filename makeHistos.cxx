@@ -158,11 +158,11 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	}
 	//3D
 	// sector 3
-	treeHisto->Project("ht3D1","phi:theta:P","S3");
-	treeHisto->Project("hs3D1","phi:theta:P","S3N2");
+	treeHisto->Project("ht3D1","PhiV:ThetaV:P","S3");
+	treeHisto->Project("hs3D1","PhiV:ThetaV:P","S3N2");
 	// sector 5
-	treeHisto->Project("ht3D2","phi:theta:P","S5");
-	treeHisto->Project("hs3D2","phi:theta:P","S5N2");
+	treeHisto->Project("ht3D2","PhiV:ThetaV:P","S5");
+	treeHisto->Project("hs3D2","PhiV:ThetaV:P","S5N2");
 
 	//define histograms arrays for efficiency (ratio total/selected)
 	TH1F * hrt[24];
