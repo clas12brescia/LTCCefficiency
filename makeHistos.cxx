@@ -64,18 +64,18 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	
 	//create histograms arrays with ranges and title defined before
 	for(int j=0; j<6; j++){
-		htot[j] = new TH1F(Form("ht%d",j+1),Form("Candidates in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],infS3[j],maxS3[j]);
-		hsel_1[j] = new TH1F(Form("hs1%d",j+1),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],infS3[j],maxS3[j]);
-		htot[j+6] = new TH1F(Form("ht%d",j+7),Form("Candidates in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],infS5[j],maxS5[j]);
-		hsel_1[j+6] = new TH1F(Form("hs1%d",j+7),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],infS5[j],maxS5[j]);
-		hsel_2[j] = new TH1F(Form("hs2%d",j+1),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],infS3[j],maxS3[j]);
-		hsel_2[j+6] = new TH1F(Form("hs2%d",j+7),Form("Candidate hits in LTCC [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],infS5[j],maxS5[j]);
+		htot[j] = new TH1F(Form("ht%d",j+1),Form("Candidates in LTCC in sector 3 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],infS3[j],maxS3[j]);
+		hsel_1[j] = new TH1F(Form("hs1%d",j+1),Form("Candidate hits in LTCC in sector 3 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],infS3[j],maxS3[j]);
+		htot[j+6] = new TH1F(Form("ht%d",j+7),Form("Candidates in LTCC in sector 5 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],infS5[j],maxS5[j]);
+		hsel_1[j+6] = new TH1F(Form("hs1%d",j+7),Form("Candidate hits in LTCC in sector 5 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],infS5[j],maxS5[j]);
+		hsel_2[j] = new TH1F(Form("hs2%d",j+1),Form("Candidate hits in LTCC in sector 3 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],infS3[j],maxS3[j]);
+		hsel_2[j+6] = new TH1F(Form("hs2%d",j+7),Form("Candidate hits in LTCC in sector 5 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],infS5[j],maxS5[j]);
 	}
 	for(int j=0; j<5; j++){
-		htot2[j] = new TH2F(Form("ht2%d",j+1),Form("Candidates in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S3[j][0],max2S3[j][0],bins2[j][1],inf2S3[j][1],max2S3[j][1]);
-		hsel2[j] = new TH2F(Form("hsel2%d",j+1),Form("Candidate hits in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S3[j][0],max2S3[j][0],bins2[j][1],inf2S3[j][1],max2S3[j][1]);
-		htot2[j+5] = new TH2F(Form("ht2%d",j+6),Form("Candidates in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S5[j][0],max2S5[j][0],bins2[j][1],inf2S5[j][1],max2S5[j][1]);
-		hsel2[j+5] = new TH2F(Form("hsel2%d",j+6),Form("Candidate hits in LTCC [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S5[j][0],max2S5[j][0],bins2[j][1],inf2S5[j][1],max2S5[j][1]);
+		htot2[j] = new TH2F(Form("ht2%d",j+1),Form("Candidates in LTCC in sector 3 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S3[j][0],max2S3[j][0],bins2[j][1],inf2S3[j][1],max2S3[j][1]);
+		hsel2[j] = new TH2F(Form("hsel2%d",j+1),Form("Candidate hits in LTCC in sector 3 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S3[j][0],max2S3[j][0],bins2[j][1],inf2S3[j][1],max2S3[j][1]);
+		htot2[j+5] = new TH2F(Form("ht2%d",j+6),Form("Candidates in LTCC in sector 5 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S5[j][0],max2S5[j][0],bins2[j][1],inf2S5[j][1],max2S5[j][1]);
+		hsel2[j+5] = new TH2F(Form("hsel2%d",j+6),Form("Candidate hits in LTCC in sector 5 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S5[j][0],max2S5[j][0],bins2[j][1],inf2S5[j][1],max2S5[j][1]);
 	}
 	
 	string varsToProjectTest[3]={"P","ThetaV","PhiV"};
@@ -225,113 +225,88 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	output.erase(output.begin(),output.begin()+20);
 	output.erase(output.end()-5,output.end());
 	
-	TH1F* htot35[6];
-	TH1F* hsel35_1[6];
-	TH1F* hsel35_2[6];
-	TH2F* htot235[5];
-	TH2F* hsel235[5];
-
-	// 1D and 2D histograms both sectors 3 and 5
-	for(int l=0; l<6; l++){//1D
-		TList* tot35 = new TList;
-		htot35[l] = new TH1F(Form("htot35%d",l),Form("Candidates in LTCC [%s]; %s",varsToProject[l].c_str(),var[l].c_str()),bins[l],inf[l],max[l]);
-		tot35->Add(htot[l]);
-		tot35->Add(htot[l+6]);
-		htot35[l]->Merge(tot35);
-		delete tot35;
-
-		TList* sel35_1 = new TList;
-		hsel35_1[l] = new TH1F(Form("hsel35_1%d",l),Form("Candidate hits in LTCC [%s]; %s",varsToProject[l].c_str(),var[l].c_str()),bins[l],inf[l],max[l]);
-		sel35_1->Add(hsel_1[l]);
-		sel35_1->Add(hsel_1[l+6]);
-		hsel35_1[l]->Merge(sel35_1);
-		delete sel35_1;
-
-		TList* sel35_2 = new TList;
-		hsel35_2[l] = new TH1F(Form("hsel35_2%d",l),Form("Candidate hits in LTCC [%s]; %s",varsToProject[l].c_str(),var[l].c_str()),bins[l],inf[l],max[l]);
-		sel35_2->Add(hsel_2[l]);
-		sel35_2->Add(hsel_2[l+6]);
-		hsel35_2[l]->Merge(sel35_2);
-		delete sel35_2;
-	}
-	for(int l=0; l<5; l++){//2D
-		TList* tot235 = new TList;
-		htot235[l] = new TH2F(Form("htot235%d",l),Form("Candidates in LTCC [%s]; %s",pair[l][0].c_str(),pair[l][1].c_str()),bins2[l][0],inf2[l][0],max2[l][0],bins2[l][1],inf2[l][1],max2[l][1]);
-		tot235->Add(htot2[l]);
-		tot235->Add(htot2[l+5]);
-		htot235[l]->Merge(tot235);
-		delete tot235;
-
-		TList* sel235 = new TList;
-		hsel235[l] = new TH2F(Form("hsel235%d",l),Form("Candidate hits in LTCC [%s]; %s",pair[l][0].c_str(),pair[l][1].c_str()),bins2[l][0],inf2[l][0],max2[l][0],bins2[l][1],inf2[l][1],max2[l][1]);
-		sel235->Add(hsel2[l]);
-		sel235->Add(hsel2[l+5]);
-		hsel235[l]->Merge(sel235);
-		delete sel235;
-	}
-
 	//create an output file `out.root` with all histograms (organized in canvases)
 	TFile* out = new TFile(Form("out_%s.root",output.c_str()),"RECREATE");
 	//array of canvases pointers
 	TCanvas** can = new TCanvas*[11];
 	
-	gStyle->SetOptStat(11);
+	gStyle->SetOptStat(11); //only name of histogram and number of entries
 	//draw and save canvases
 	for(int k=0; k<6; k++){
-		//1D (from can0 to can3)
-		can[k] = new TCanvas(Form("can%d",k),Form("can%d",k),800,800);
-		can[k]->Divide(2,2);
-		//Candidates in LTCC (sec 3 and 5)
+		//1D HISTOGRAMS
+		can[k] = new TCanvas(Form("can%d",k),Form("can%d",k),800,1200);
+		can[k]->Divide(2,3);
+		//Candidates in LTCC (sec 3)
 		can[k]->cd(1);
-		htot35[k]->Draw();
-		//Candidates hits in LTCC (sec 3 and 5)
-		can[k]->cd(2);
-		hsel35_1[k]->Draw();
-		hsel35_2[k]->SetLineColor(kRed);
-		auto legend = new TLegend(0.9,0.9,0.7,0.8);
-		legend->AddEntry(hsel35_1[k],"n_{phe}>1","l");
-   	legend->AddEntry(hsel35_2[k],"n_{phe}>2","l");
-   	legend->Draw();
-		hsel35_2[k]->Draw("SAME");
-		//Efficiency in sector 3
+		htot[k]->SetLineColor(kBlack);
+		htot[k]->Draw(); //htot35
+		//Candidates in LTCC (sec 5)
+		can[k]->cd(2); 
+		htot[k+6]->SetLineColor(kBlack);
+		htot[k+6]->Draw();
+		//Candidates hits in LTCC (sec 3)
 		can[k]->cd(3);
+		hsel_1[k]->Draw(); //hsel35_1[k]
+		hsel_2[k]->SetLineColor(kRed); //hsel35_2[k]
+		auto legend1 = new TLegend(0.9,0.9,0.7,0.8);
+		legend1->AddEntry(hsel_1[k],"n_{phe}>1","l"); //hsel35_1
+   		legend1->AddEntry(hsel_2[k],"n_{phe}>2","l"); //hsel35_2
+   		legend1->Draw();
+		hsel_2[k]->Draw("SAME"); //hsel35_2
+		//Candidates hits in LTCC (sec 5)
+   		can[k]->cd(4);
+   		hsel_1[k+6]->Draw();
+		hsel_2[k+6]->SetLineColor(kRed);
+		auto legend = new TLegend(0.9,0.9,0.7,0.8);
+		legend->AddEntry(hsel_1[k+6],"n_{phe}>1","l");
+   		legend->AddEntry(hsel_2[k+6],"n_{phe}>2","l");
+   		legend->Draw();
+		hsel_2[k+6]->Draw("SAME");
+		//Efficiency in sector 3
+		can[k]->cd(5);
 		hrt[k]->Draw();
 		hrt[k+6]->SetLineColor(kRed);
 		auto legend2 = new TLegend(0.9,0.9,0.7,0.8);
 		legend2->AddEntry(hrt[k],"n_{phe}>1","l");
-   	legend2->AddEntry(hrt[k+6],"n_{phe}>2","l");
-   	legend2->Draw();
+   		legend2->AddEntry(hrt[k+6],"n_{phe}>2","l");
+   		legend2->Draw();
 		hrt[k+6]->Draw("SAME");
 		//Efficiency in sector 5
-		can[k]->cd(4);
+		can[k]->cd(6);
 		hrt[k+12]->Draw();
 		hrt[k+18]->SetLineColor(kRed);
 		auto legend3 = new TLegend(0.9,0.9,0.7,0.8);
 		legend3->AddEntry(hrt[k+12],"n_{phe}>1","l");
-   	legend3->AddEntry(hrt[k+18],"n_{phe}>2","l");
-   	legend3->Draw();
+   		legend3->AddEntry(hrt[k+18],"n_{phe}>2","l");
+   		legend3->Draw();
 		hrt[k+18]->Draw("SAME");
 
 		can[k]->Write();
 	}
 	for(int k=0; k<5; k++){
-		//2D (from can2_0 to can2_3)
+		//2D HISTOGRAMS
 		string option;
 		option="CONT4Z";
 		
-		can[k+6] = new TCanvas(Form("can2_%d",k),Form("can2_%d",k),800,800);
-		can[k+6]->Divide(2,2);
-		//Candidates in LTCC (sec 3 and 5)
+		can[k+6] = new TCanvas(Form("can2_%d",k),Form("can2_%d",k),800,1200);
+		can[k+6]->Divide(2,3);
+		//Candidates in LTCC (sec 3)
 		can[k+6]->cd(1);
-		htot235[k]->Draw(option.c_str());
-		//Candidates hits in LTCC (sec 3 and 5)
+		htot2[k]->Draw(option.c_str());
+		//Candidates in LTCC (sec 5)
 		can[k+6]->cd(2);
-		hsel235[k]->Draw(option.c_str());
-		//Efficiency in sector 3
+		htot2[k+5]->Draw(option.c_str());
+		//Candidates hits in LTCC (sec 3)
 		can[k+6]->cd(3);
+		hsel2[k]->Draw(option.c_str());
+		//Candidates hits in LTCC (sec 5)
+		can[k+6]->cd(4);
+		hsel2[k+5]->Draw(option.c_str());
+		//Efficiency in sector 3
+		can[k+6]->cd(5);
 		hrt2[k]->Draw(option.c_str());
 		//Efficiency in sector 5
-		can[k+6]->cd(4);
+		can[k+6]->cd(6);
 		hrt2[k+5]->Draw(option.c_str());
 
 		can[k+6]->Write();
@@ -397,16 +372,16 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		htest_status[k+3]->Draw("SAME");
 		auto legend = new TLegend(0.9,0.9,0.7,0.8);
 		legend->AddEntry(htest_status[k],"status #geq 2110","l");
-   	legend->AddEntry(htest_status[k+3],"status #geq 2230","l");
-   	legend->Draw("SAME");
+   		legend->AddEntry(htest_status[k+3],"status #geq 2230","l");
+   		legend->Draw("SAME");
 		cant[k]->cd(2);
 		htest_status[k+6]->Draw();
 		htest_status[k+9]->SetLineColor(kRed);
 		htest_status[k+9]->Draw("SAME");
 		auto legend1 = new TLegend(0.9,0.9,0.7,0.8);
 		legend1->AddEntry(htest_status[k+6],"status #geq 2110, n_{phe}>2","l");
-   	legend1->AddEntry(htest_status[k+9],"status #geq 2230, n_{phe}>2","l");
-   	legend1->Draw("SAME");
+   		legend1->AddEntry(htest_status[k+9],"status #geq 2230, n_{phe}>2","l");
+   		legend1->Draw("SAME");
 		
 		cant[k+3] = new TCanvas(Form("cant%d",k+4),Form("cant%d",k+4),1200,600);
 		cant[k+3]->Divide(2,1);
@@ -418,9 +393,9 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		htest_chi2pid[k+6]->Draw("SAME");
 		auto legend2 = new TLegend(0.9,0.9,0.7,0.8);
 		legend2->AddEntry(htest_chi2pid[k],"abs(#chi^{2}_{PID})<3","l");
-   	legend2->AddEntry(htest_chi2pid[k+3],"abs(#chi^{2}_{PID})<2","l");
+   		legend2->AddEntry(htest_chi2pid[k+3],"abs(#chi^{2}_{PID})<2","l");
 		legend2->AddEntry(htest_chi2pid[k+6],"abs(#chi^{2}_{PID})<1","l");
-   	legend2->Draw("SAME");
+   		legend2->Draw("SAME");
 		
 		cant[k+3]->cd(2);
 		htest_chi2pid[k+9]->Draw();
@@ -430,9 +405,9 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		htest_chi2pid[k+15]->Draw("SAME");
 		auto legend3 = new TLegend(0.9,0.9,0.7,0.8);
 		legend3->AddEntry(htest_chi2pid[k+9],"abs(#chi^{2}_{PID})<3, n_{phe}>2","l");
-   	legend3->AddEntry(htest_chi2pid[k+12],"abs(#chi^{2}_{PID})<2, n_{phe}>2","l");
+   		legend3->AddEntry(htest_chi2pid[k+12],"abs(#chi^{2}_{PID})<2, n_{phe}>2","l");
 		legend3->AddEntry(htest_chi2pid[k+15],"abs(#chi^{2}_{PID})<1, n_{phe}>2","l");
-   	legend3->Draw("SAME");
+   		legend3->Draw("SAME");
 	}
 
 	//save the tests histograms in a pdf file tests.pdf
@@ -445,32 +420,81 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 
 }
 
-//void SetToPolar(TH2F* h, TCanvas* c){
-//	// hide the cartesian axes system
-//	h->GetXaxis()->SetLabelOffset(999);
-//	h->GetXaxis()->SetLabelSize(0);
-//	h->SetAxisColor(kWhite,"x");
-//	h->GetXaxis()->SetTickLength(0);
-//	h->GetXaxis()->SetTitle("");
-//	
-//	h->GetYaxis()->SetLabelOffset(999);
-//	h->GetYaxis()->SetLabelSize(0);
-//	h->SetAxisColor(kWhite,"y");
-//	h->GetYaxis()->SetTickLength(0);
-//	h->GetYaxis()->SetTitle("");
-//	// save min and max value of theta
-//	double ymax = h->GetYaxis()->GetXmax();
-//	double ymin = h->GetYaxis()->GetXmin();
-//
-//	// create a TGraphPolargram
-//	// radial: theta, polar: phi
-//	TGraphPolargram* gp = new TGraphPolargram("gp",ymin,ymax,0,360);
-//	gp->SetToDegree();
-//	gp->SetNdivPolar(6);
-//	gp->SetNdivRadial(4);
-//	gp->SetPolarLabelFont(42);
-//	gp->SetRadialLabelFont(42);
-//	gp->Draw();
-//	c->Modified();
-//	c->Update();
-//}
+//OLD PARTS OF CODE (EVENTUALLY USEFUL)
+
+//Code to obtain histograms for total event (sector 3 AND 5) 
+/*	TH1F* htot35[6];
+	TH1F* hsel35_1[6];
+	TH1F* hsel35_2[6];
+	TH2F* htot235[5];
+	TH2F* hsel235[5];
+
+	// 1D and 2D histograms both sectors 3 and 5
+	for(int l=0; l<6; l++){//1D
+		TList* tot35 = new TList;
+		htot35[l] = new TH1F(Form("htot35%d",l),Form("Candidates in LTCC [%s]; %s",varsToProject[l].c_str(),var[l].c_str()),bins[l],inf[l],max[l]);
+		tot35->Add(htot[l]);
+		tot35->Add(htot[l+6]);
+		htot35[l]->Merge(tot35);
+		delete tot35;
+
+		TList* sel35_1 = new TList;
+		hsel35_1[l] = new TH1F(Form("hsel35_1%d",l),Form("Candidate hits in LTCC [%s]; %s",varsToProject[l].c_str(),var[l].c_str()),bins[l],inf[l],max[l]);
+		sel35_1->Add(hsel_1[l]);
+		sel35_1->Add(hsel_1[l+6]);
+		hsel35_1[l]->Merge(sel35_1);
+		delete sel35_1;
+
+		TList* sel35_2 = new TList;
+		hsel35_2[l] = new TH1F(Form("hsel35_2%d",l),Form("Candidate hits in LTCC [%s]; %s",varsToProject[l].c_str(),var[l].c_str()),bins[l],inf[l],max[l]);
+		sel35_2->Add(hsel_2[l]);
+		sel35_2->Add(hsel_2[l+6]);
+		hsel35_2[l]->Merge(sel35_2);
+		delete sel35_2;
+	}
+	for(int l=0; l<5; l++){//2D
+		TList* tot235 = new TList;
+		htot235[l] = new TH2F(Form("htot235%d",l),Form("Candidates in LTCC [%s]; %s",pair[l][0].c_str(),pair[l][1].c_str()),bins2[l][0],inf2[l][0],max2[l][0],bins2[l][1],inf2[l][1],max2[l][1]);
+		tot235->Add(htot2[l]);
+		tot235->Add(htot2[l+5]);
+		htot235[l]->Merge(tot235);
+		delete tot235;
+
+		TList* sel235 = new TList;
+		hsel235[l] = new TH2F(Form("hsel235%d",l),Form("Candidate hits in LTCC [%s]; %s",pair[l][0].c_str(),pair[l][1].c_str()),bins2[l][0],inf2[l][0],max2[l][0],bins2[l][1],inf2[l][1],max2[l][1]);
+		sel235->Add(hsel2[l]);
+		sel235->Add(hsel2[l+5]);
+		hsel235[l]->Merge(sel235);
+		delete sel235;
+	}*/
+
+//Code for polar coordinates axes
+/*void SetToPolar(TH2F* h, TCanvas* c){
+	// hide the cartesian axes system
+	h->GetXaxis()->SetLabelOffset(999);
+	h->GetXaxis()->SetLabelSize(0);
+	h->SetAxisColor(kWhite,"x");
+	h->GetXaxis()->SetTickLength(0);
+	h->GetXaxis()->SetTitle("");
+	
+	h->GetYaxis()->SetLabelOffset(999);
+	h->GetYaxis()->SetLabelSize(0);
+	h->SetAxisColor(kWhite,"y");
+	h->GetYaxis()->SetTickLength(0);
+	h->GetYaxis()->SetTitle("");
+	// save min and max value of theta
+	double ymax = h->GetYaxis()->GetXmax();
+	double ymin = h->GetYaxis()->GetXmin();
+
+	// create a TGraphPolargram
+	// radial: theta, polar: phi
+	TGraphPolargram* gp = new TGraphPolargram("gp",ymin,ymax,0,360);
+	gp->SetToDegree();
+	gp->SetNdivPolar(6);
+	gp->SetNdivRadial(4);
+	gp->SetPolarLabelFont(42);
+	gp->SetRadialLabelFont(42);
+	gp->Draw();
+	c->Modified();
+	c->Update();
+}*/
