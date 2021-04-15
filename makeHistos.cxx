@@ -21,13 +21,10 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	TH1F * htot[12];
 	TH1F * hsel_1[12];
 	TH1F * hsel_2[12];
-	TH2F * htot2[10];
-	TH2F * hsel2[10];
+	TH2F * htot2D[12];
+	TH2F * hsel2D[12];
 	TH3F * htot3D[2];
 	TH3F * hsel3D[2];
-	//histograms to test conditions
-	TH1F * htest_status[12];
-	TH1F * htest_chi2pid[18];
 	//min and max of ranges for variables:
 	// P, theta, phi, Theta, Phi, costheta
 	double infS3[6]={2.5,5,-90,3,80,0.8};
@@ -38,17 +35,17 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	double max[6]={9.5,35,180,33,200,1};
 	//ranges for 2D-histograms variables pairs:
 	// (x,y), (theta, phi), (Theta,Phi), (costheta, phi), (P, theta)
-	double inf2S3[5][2]={{-350,0},{5,-90},{3,80},{0.8,-90},{2.5,3}};
-	double max2S3[5][2]={{0,350},{35,-30},{33,160},{1,-30},{9.5,33}};
-	double inf2S5[5][2]={{-350,-350},{5,30},{3,-160},{0.8,30},{2.5,3}};
-	double max2S5[5][2]={{0,0},{35,90},{33,-80},{1,90},{9.5,33}};
-	double inf2[5][2]={{-350,-350},{5,-180},{3,-200},{0.8,-180},{2.5,3}};
-	double max2[5][2]={{350,350},{35,180},{33,200},{1,180},{9.5,33}};
+	double inf2S3[6][2]={{-300,50},{5,-90},{3,80},{0.8,-90},{2.5,3},{-300,50}};
+	double max2S3[6][2]={{0,350},{35,-30},{33,160},{1,-30},{9.5,33},{0,350}};
+	double inf2S5[6][2]={{-300,-350},{5,30},{3,-160},{0.8,30},{2.5,3},{-300,-350}};
+	double max2S5[6][2]={{0,-50},{35,90},{33,-80},{1,90},{9.5,33},{0,-50}};
+//	double inf2[6][2]={{-350,-350},{5,-180},{3,-200},{0.8,-180},{2.5,3},{-350,-350}};
+//	double max2[6][2]={{350,350},{35,180},{33,200},{1,180},{9.5,33},{350,350}};
 	//customize the binning of the histograms
 	// P, theta, phi, Theta, Phi, costheta
-	int bins[6]={56,90,180,90,180,80};
+	int bins[6]={56,60,80,60,80,80};
 	// (x,y), (theta, phi), (Theta, Phi), (costheta, phi), (P, theta)
-	int bins2[5][2]={{150,150},{120,120},{120,120},{120,180},{56,90}};
+	int bins2[6][2]={{150,150},{120,120},{120,120},{120,180},{56,90},{150,150}};
 	
 	// set useful aliases for histograms
 	treeHisto->SetAlias("R","sqrt(X*X+Y*Y+Z*Z)");
@@ -60,7 +57,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	//title of axes, variables and variables pairs
 	string var[6]={"P(GeV/c)","#theta(deg)","#phi(deg)","#theta(deg)","#phi(deg)","cos(#theta)(#)"};
 	string varsToProject[6] = {"P", "theta", "phi", "ThetaV", "PhiV", "costheta"};
-	string pair[5][2]={{"Y:X","x(cm); y(cm)"},{"phi:theta","#theta(deg); #phi(deg)"},{"PhiV:ThetaV","#theta(deg); #phi(deg)"},{"phi:costheta","cos#theta; #phi(deg)"},{"ThetaV:P","P(GeV/c); #theta(deg)"}};
+	string pair[6][2]={{"Y:X","x(cm); y(cm)"},{"phi:theta","#theta(deg); #phi(deg)"},{"PhiV:ThetaV","#theta(deg); #phi(deg)"},{"phi:costheta","cos#theta; #phi(deg)"},{"ThetaV:P","P(GeV/c); #theta(deg)"},{"Y_che:X_che","x_{che}(cm); y_{che}(cm)"}};
 	
 	//create histograms arrays with ranges and title defined before
 	for(int j=0; j<6; j++){
@@ -71,26 +68,11 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		hsel_2[j] = new TH1F(Form("hs2%d",j+1),Form("Candidate hits in LTCC in sector 3 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],infS3[j],maxS3[j]);
 		hsel_2[j+6] = new TH1F(Form("hs2%d",j+7),Form("Candidate hits in LTCC in sector 5 [%s]; %s",varsToProject[j].c_str(),var[j].c_str()),bins[j],infS5[j],maxS5[j]);
 	}
-	for(int j=0; j<5; j++){
-		htot2[j] = new TH2F(Form("ht2%d",j+1),Form("Candidates in LTCC in sector 3 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S3[j][0],max2S3[j][0],bins2[j][1],inf2S3[j][1],max2S3[j][1]);
-		hsel2[j] = new TH2F(Form("hsel2%d",j+1),Form("Candidate hits in LTCC in sector 3 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S3[j][0],max2S3[j][0],bins2[j][1],inf2S3[j][1],max2S3[j][1]);
-		htot2[j+5] = new TH2F(Form("ht2%d",j+6),Form("Candidates in LTCC in sector 5 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S5[j][0],max2S5[j][0],bins2[j][1],inf2S5[j][1],max2S5[j][1]);
-		hsel2[j+5] = new TH2F(Form("hsel2%d",j+6),Form("Candidate hits in LTCC in sector 5 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S5[j][0],max2S5[j][0],bins2[j][1],inf2S5[j][1],max2S5[j][1]);
-	}
-	
-	string varsToProjectTest[3]={"P","ThetaV","PhiV"};
-	for(int j=0; j<3; j++){
-			htest_status[j] = new TH1F(Form("htests%d",j+1),Form("Test of status; %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
-			htest_status[j+3] = new TH1F(Form("htests%d",j+4),Form("Test of status (sel); %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
-			htest_status[j+6] = new TH1F(Form("htests%d",j+7),Form("Test of status; %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
-			htest_status[j+9] = new TH1F(Form("htests%d",j+10),Form("Test of status (sel); %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
-			
-			htest_chi2pid[j] = new TH1F(Form("htestc%d",j+1),Form("Test of status; %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
-			htest_chi2pid[j+3] = new TH1F(Form("htestc%d",j+4),Form("Test of status (sel); %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
-			htest_chi2pid[j+6] = new TH1F(Form("htestc%d",j+7),Form("Test of status; %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
-			htest_chi2pid[j+9] = new TH1F(Form("htestc%d",j+10),Form("Test of status (sel); %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
-			htest_chi2pid[j+12] = new TH1F(Form("htestc%d",j+13),Form("Test of status; %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
-			htest_chi2pid[j+15] = new TH1F(Form("htestc%d",j+16),Form("Test of status (sel); %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
+	for(int j=0; j<6; j++){
+		htot2D[j] = new TH2F(Form("ht2D%d",j+1),Form("Candidates in LTCC in sector 3 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S3[j][0],max2S3[j][0],bins2[j][1],inf2S3[j][1],max2S3[j][1]);
+		hsel2D[j] = new TH2F(Form("hsel2D%d",j+1),Form("Candidate hits in LTCC in sector 3 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S3[j][0],max2S3[j][0],bins2[j][1],inf2S3[j][1],max2S3[j][1]);
+		htot2D[j+6] = new TH2F(Form("ht2D%d",j+7),Form("Candidates in LTCC in sector 5 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S5[j][0],max2S5[j][0],bins2[j][1],inf2S5[j][1],max2S5[j][1]);
+		hsel2D[j+6] = new TH2F(Form("hsel2D%d",j+7),Form("Candidate hits in LTCC in sector 5 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()),bins2[j][0],inf2S5[j][0],max2S5[j][0],bins2[j][1],inf2S5[j][1],max2S5[j][1]);
 	}
 
 	htot3D[0] = new TH3F("ht3D1","Candidates in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",56,2.5,9.5,15,3,33,40,80,160);
@@ -107,18 +89,6 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	treeHisto->SetAlias("S5","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && Y<0 && charge==1");							//sector 5
 	treeHisto->SetAlias("S5N1","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && Y<0 && nphe>1 && charge==1");	//sector 5, 1 nphe
 	treeHisto->SetAlias("S5N2","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && Y<0 && nphe>2 && charge==1");	//sector 5, 2 nphe
-	// status and chi2pid tests
-	treeHisto->SetAlias("status1","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && charge==1");
-	treeHisto->SetAlias("status2","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2229 && charge==1");
-	treeHisto->SetAlias("N2_status1","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && charge==1 && nphe>2");
-	treeHisto->SetAlias("N2_status2","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2229 && charge==1 && nphe>2");
-	
-	treeHisto->SetAlias("chi2pid1","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && charge==1");
-	treeHisto->SetAlias("chi2pid2","mm>0.88 && mm<1 && abs(chi2pid)<2 && status>2109 && charge==1");
-	treeHisto->SetAlias("chi2pid3","mm>0.88 && mm<1 && abs(chi2pid)<1 && status>2109 && charge==1");
-	treeHisto->SetAlias("N2_chi2pid1","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && charge==1 && nphe>2");
-	treeHisto->SetAlias("N2_chi2pid2","mm>0.88 && mm<1 && abs(chi2pid)<2 && status>2109 && charge==1 && nphe>2");
-	treeHisto->SetAlias("N2_chi2pid3","mm>0.88 && mm<1 && abs(chi2pid)<1 && status>2109 && charge==1 && nphe>2");
 
 	//fill the histograms arrays with the tree branches
 	for(int j=0; j<6; j++){
@@ -132,29 +102,14 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		treeHisto->Project(Form("hs1%d",j+7), varsToProject[j].c_str(), "S5N1");	//condition on photoelectrons
 		treeHisto->Project(Form("hs2%d",j+7), varsToProject[j].c_str(), "S5N2");	//condition on photoelectrons
 	}
-	for(int j=0; j<5; j++){
+	for(int j=0; j<6; j++){
 		//2D
 		// sector 3
-		treeHisto->Project(Form("ht2%d",j+1), pair[j][0].c_str(),"S3");
-		treeHisto->Project(Form("hsel2%d",j+1), pair[j][0].c_str(),"S3N2");				//condition on photoelectrons
+		treeHisto->Project(Form("ht2D%d",j+1), pair[j][0].c_str(),"S3");
+		treeHisto->Project(Form("hsel2D%d",j+1), pair[j][0].c_str(),"S3N2");				//condition on photoelectrons
 		// sector 5
-		treeHisto->Project(Form("ht2%d",j+6), pair[j][0].c_str(),"S5");
-		treeHisto->Project(Form("hsel2%d",j+6), pair[j][0].c_str(),"S5N2");
-	}
-	for(int j=0; j<3; j++){//histograms to test the conditions on status and chi2pid
-		//status >= (2110,2230) (abs(chi2pid)<3)
-		treeHisto->Project(Form("htests%d",j+1),varsToProjectTest[j].c_str(),"status1");
-		treeHisto->Project(Form("htests%d",j+4),varsToProjectTest[j].c_str(),"status2");
-		treeHisto->Project(Form("htests%d",j+7),varsToProjectTest[j].c_str(),"N2_status1");
-		treeHisto->Project(Form("htests%d",j+10),varsToProjectTest[j].c_str(),"N2_status2");
-
-		//chi2pid < (3,2,1) (status>=2110)
-		treeHisto->Project(Form("htestc%d",j+1),varsToProjectTest[j].c_str(),"chi2pid1");
-		treeHisto->Project(Form("htestc%d",j+4),varsToProjectTest[j].c_str(),"chi2pid2");
-		treeHisto->Project(Form("htestc%d",j+7),varsToProjectTest[j].c_str(),"chi2pid3");
-		treeHisto->Project(Form("htestc%d",j+10),varsToProjectTest[j].c_str(),"N2_chi2pid1");
-		treeHisto->Project(Form("htestc%d",j+13),varsToProjectTest[j].c_str(),"N2_chi2pid2");
-		treeHisto->Project(Form("htestc%d",j+16),varsToProjectTest[j].c_str(),"N2_chi2pid3");
+		treeHisto->Project(Form("ht2D%d",j+7), pair[j][0].c_str(),"S5");
+		treeHisto->Project(Form("hsel2D%d",j+7), pair[j][0].c_str(),"S5N2");
 	}
 	//3D
 	// sector 3
@@ -166,7 +121,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 
 	//define histograms arrays for efficiency (ratio total/selected)
 	TH1F * hrt[24];
-	TH2F * hrt2[10];
+	TH2F * hrt2D[12];
 	TH3F * hrt3D[2];
 
 	//create the ratio histograms
@@ -195,18 +150,18 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		hrt[j+18]->SetStats(0);
 		hrt[j+18]->Divide(htot[j+6]);
 	}
-	for(int j=0; j<5; j++){
+	for(int j=0; j<6; j++){
 		//2D
 		// sector 3
-		hrt2[j] = (TH2F*) hsel2[j]->Clone(Form("hrt2%d",j+1));
-		hrt2[j]->SetTitle(Form("Efficiency in sector 3 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()));
-		hrt2[j]->SetStats(0);
-		hrt2[j]->Divide(htot2[j]);
+		hrt2D[j] = (TH2F*) hsel2D[j]->Clone(Form("hrt2D%d",j+1));
+		hrt2D[j]->SetTitle(Form("Efficiency in sector 3 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()));
+		hrt2D[j]->SetStats(0);
+		hrt2D[j]->Divide(htot2D[j]);
 		// sector 5
-		hrt2[j+5] = (TH2F*) hsel2[j+5]->Clone(Form("hrt2%d",j+6));
-		hrt2[j+5]->SetTitle(Form("Efficiency in sector 5 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()));
-		hrt2[j+5]->SetStats(0);
-		hrt2[j+5]->Divide(htot2[j+5]);
+		hrt2D[j+6] = (TH2F*) hsel2D[j+6]->Clone(Form("hrt2D%d",j+7));
+		hrt2D[j+6]->SetTitle(Form("Efficiency in sector 5 [%s]; %s",pair[j][0].c_str(),pair[j][1].c_str()));
+		hrt2D[j+6]->SetStats(0);
+		hrt2D[j+6]->Divide(htot2D[j+6]);
 	}
 	//3D
 	// sector 3
@@ -225,45 +180,43 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	output.erase(output.begin(),output.begin()+20);
 	output.erase(output.end()-5,output.end());
 	
-	//create an output file `out.root` with all histograms (organized in canvases)
+	//create an output file `out_inputfile.root` with all histograms (organized in canvases)
 	TFile* out = new TFile(Form("out_%s.root",output.c_str()),"RECREATE");
 	//array of canvases pointers
-	TCanvas** can = new TCanvas*[11];
+	TCanvas** can = new TCanvas*[12];
 	
 	gStyle->SetOptStat(11); //only name of histogram and number of entries
 	//draw and save canvases
 	for(int k=0; k<6; k++){
 		//1D HISTOGRAMS
-		can[k] = new TCanvas(Form("can%d",k),Form("can%d",k),800,1200);
-		can[k]->Divide(2,3);
+		can[k] = new TCanvas(Form("can%d",k),Form("can%d",k),800,800);
+		can[k]->Divide(2,2);
 		//Candidates in LTCC (sec 3)
 		can[k]->cd(1);
 		htot[k]->SetLineColor(kBlack);
 		htot[k]->Draw(); //htot35
-		//Candidates in LTCC (sec 5)
-		can[k]->cd(2); 
-		htot[k+6]->SetLineColor(kBlack);
-		htot[k+6]->Draw();
-		//Candidates hits in LTCC (sec 3)
-		can[k]->cd(3);
-		hsel_1[k]->Draw(); //hsel35_1[k]
+		hsel_1[k]->Draw("SAME"); //hsel35_1[k]
 		hsel_2[k]->SetLineColor(kRed); //hsel35_2[k]
 		auto legend1 = new TLegend(0.9,0.9,0.7,0.8);
+		legend1->AddEntry(htot[k],"Total","l");
 		legend1->AddEntry(hsel_1[k],"n_{phe}>1","l"); //hsel35_1
    		legend1->AddEntry(hsel_2[k],"n_{phe}>2","l"); //hsel35_2
    		legend1->Draw();
 		hsel_2[k]->Draw("SAME"); //hsel35_2
-		//Candidates hits in LTCC (sec 5)
-   		can[k]->cd(4);
-   		hsel_1[k+6]->Draw();
+		//Candidates in LTCC (sec 5)
+   		can[k]->cd(2);
+   		htot[k+6]->SetLineColor(kBlack);
+		htot[k+6]->Draw();
+   		hsel_1[k+6]->Draw("SAME");
 		hsel_2[k+6]->SetLineColor(kRed);
 		auto legend = new TLegend(0.9,0.9,0.7,0.8);
+		legend->AddEntry(htot[k+6],"Total","l");
 		legend->AddEntry(hsel_1[k+6],"n_{phe}>1","l");
    		legend->AddEntry(hsel_2[k+6],"n_{phe}>2","l");
    		legend->Draw();
 		hsel_2[k+6]->Draw("SAME");
 		//Efficiency in sector 3
-		can[k]->cd(5);
+		can[k]->cd(3);
 		hrt[k]->Draw();
 		hrt[k+6]->SetLineColor(kRed);
 		auto legend2 = new TLegend(0.9,0.9,0.7,0.8);
@@ -272,7 +225,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
    		legend2->Draw();
 		hrt[k+6]->Draw("SAME");
 		//Efficiency in sector 5
-		can[k]->cd(6);
+		can[k]->cd(4);
 		hrt[k+12]->Draw();
 		hrt[k+18]->SetLineColor(kRed);
 		auto legend3 = new TLegend(0.9,0.9,0.7,0.8);
@@ -283,7 +236,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 
 		can[k]->Write();
 	}
-	for(int k=0; k<5; k++){
+	for(int k=0; k<6; k++){
 		//2D HISTOGRAMS
 		string option;
 		option="CONT4Z";
@@ -292,26 +245,38 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 		can[k+6]->Divide(2,3);
 		//Candidates in LTCC (sec 3)
 		can[k+6]->cd(1);
-		htot2[k]->Draw(option.c_str());
+		htot2D[k]->Draw(option.c_str());
 		//Candidates in LTCC (sec 5)
 		can[k+6]->cd(2);
-		htot2[k+5]->Draw(option.c_str());
+		htot2D[k+6]->Draw(option.c_str());
 		//Candidates hits in LTCC (sec 3)
 		can[k+6]->cd(3);
-		hsel2[k]->Draw(option.c_str());
+		hsel2D[k]->Draw(option.c_str());
 		//Candidates hits in LTCC (sec 5)
 		can[k+6]->cd(4);
-		hsel2[k+5]->Draw(option.c_str());
+		hsel2D[k+6]->Draw(option.c_str());
 		//Efficiency in sector 3
 		can[k+6]->cd(5);
-		hrt2[k]->Draw(option.c_str());
+		hrt2D[k]->Draw(option.c_str());
 		//Efficiency in sector 5
 		can[k+6]->cd(6);
-		hrt2[k+5]->Draw(option.c_str());
+		hrt2D[k+6]->Draw(option.c_str());
 
 		can[k+6]->Write();
 
 	}
+
+	//
+	TCanvas* can_che = new TCanvas("can_che","can_che",800,400);
+	can_che->Divide(2,1);
+	can_che->cd(1);
+	hsel2D[0]->Draw();
+	hsel2D[5]->SetMarkerColor(kRed);
+	hsel2D[5]->Draw("SAME");
+	can_che->cd(2);
+	hsel2D[6]->Draw();
+	hsel2D[11]->SetMarkerColor(kRed);
+	hsel2D[11]->Draw("SAME");
 	
 	// save in two file (one per sector) the table (P,theta,phi,efficiency)
 	// the center of P, theta and phi bins is saved
@@ -343,17 +308,19 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	
 	//save the canvases in a unique pdf file
 	//one canvas for each page
-	can[0]->SaveAs(Form("out_%s.pdf(",output.c_str())); // <-- first page
-	can[1]->SaveAs(Form("out_%s.pdf",output.c_str()));
-	can[2]->SaveAs(Form("out_%s.pdf",output.c_str()));
-	can[3]->SaveAs(Form("out_%s.pdf",output.c_str()));
-	can[4]->SaveAs(Form("out_%s.pdf",output.c_str()));
-	can[5]->SaveAs(Form("out_%s.pdf",output.c_str()));
-	can[6]->SaveAs(Form("out_%s.pdf",output.c_str()));
-	can[7]->SaveAs(Form("out_%s.pdf",output.c_str()));
-	can[8]->SaveAs(Form("out_%s.pdf",output.c_str()));
-	can[9]->SaveAs(Form("out_%s.pdf",output.c_str()));
-	can[10]->SaveAs(Form("out_%s.pdf)",output.c_str())); // <-- last page
+	can[0]->SaveAs(Form("out1D_%s.pdf(",output.c_str())); // <-- first page
+	can[1]->SaveAs(Form("out1D_%s.pdf",output.c_str()));
+	can[2]->SaveAs(Form("out1D_%s.pdf",output.c_str()));
+	can[3]->SaveAs(Form("out1D_%s.pdf",output.c_str()));
+	can[4]->SaveAs(Form("out1D_%s.pdf",output.c_str()));
+	can[5]->SaveAs(Form("out1D_%s.pdf)",output.c_str()));
+	can[6]->SaveAs(Form("out2D_%s.pdf(",output.c_str()));
+	can[7]->SaveAs(Form("out2D_%s.pdf",output.c_str()));
+	can[8]->SaveAs(Form("out2D_%s.pdf",output.c_str()));
+	can[9]->SaveAs(Form("out2D_%s.pdf",output.c_str()));
+	can[10]->SaveAs(Form("out2D_%s.pdf",output.c_str()));
+	can[11]->SaveAs(Form("out2D_%s.pdf",output.c_str())); 
+	can_che->SaveAs(Form("out2D_%s.pdf)",output.c_str())); // <-- last page
 
 	out->Close();
 	s3out.close();
@@ -362,6 +329,55 @@ void makeHistos(string treeFile="LTCCefficiency_tree.root"){
 	////////////////////////////////////////////////
 	// TESTS FOR CONDITIONS ON STATUS AND CHI2PID //
 	////////////////////////////////////////////////
+
+	//histograms to test conditions
+	TH1F * htest_status[12];
+	TH1F * htest_chi2pid[18];
+
+	string varsToProjectTest[3]={"P","ThetaV","PhiV"};
+	for(int j=0; j<3; j++){
+			htest_status[j] = new TH1F(Form("htests%d",j+1),Form("Test of status; %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
+			htest_status[j+3] = new TH1F(Form("htests%d",j+4),Form("Test of status (sel); %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
+			htest_status[j+6] = new TH1F(Form("htests%d",j+7),Form("Test of status; %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
+			htest_status[j+9] = new TH1F(Form("htests%d",j+10),Form("Test of status (sel); %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
+			
+			htest_chi2pid[j] = new TH1F(Form("htestc%d",j+1),Form("Test of status; %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
+			htest_chi2pid[j+3] = new TH1F(Form("htestc%d",j+4),Form("Test of status (sel); %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
+			htest_chi2pid[j+6] = new TH1F(Form("htestc%d",j+7),Form("Test of status; %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
+			htest_chi2pid[j+9] = new TH1F(Form("htestc%d",j+10),Form("Test of status (sel); %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
+			htest_chi2pid[j+12] = new TH1F(Form("htestc%d",j+13),Form("Test of status; %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
+			htest_chi2pid[j+15] = new TH1F(Form("htestc%d",j+16),Form("Test of status (sel); %s",varsToProjectTest[j].c_str()),bins[j],inf[j],max[j]);
+	}
+
+	// status and chi2pid tests
+	treeHisto->SetAlias("status1","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && charge==1");
+	treeHisto->SetAlias("status2","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2229 && charge==1");
+	treeHisto->SetAlias("N2_status1","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && charge==1 && nphe>2");
+	treeHisto->SetAlias("N2_status2","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2229 && charge==1 && nphe>2");
+	
+	treeHisto->SetAlias("chi2pid1","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && charge==1");
+	treeHisto->SetAlias("chi2pid2","mm>0.88 && mm<1 && abs(chi2pid)<2 && status>2109 && charge==1");
+	treeHisto->SetAlias("chi2pid3","mm>0.88 && mm<1 && abs(chi2pid)<1 && status>2109 && charge==1");
+	treeHisto->SetAlias("N2_chi2pid1","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && charge==1 && nphe>2");
+	treeHisto->SetAlias("N2_chi2pid2","mm>0.88 && mm<1 && abs(chi2pid)<2 && status>2109 && charge==1 && nphe>2");
+	treeHisto->SetAlias("N2_chi2pid3","mm>0.88 && mm<1 && abs(chi2pid)<1 && status>2109 && charge==1 && nphe>2");
+
+	for(int j=0; j<3; j++){//histograms to test the conditions on status and chi2pid
+		//status >= (2110,2230) (abs(chi2pid)<3)
+		treeHisto->Project(Form("htests%d",j+1),varsToProjectTest[j].c_str(),"status1");
+		treeHisto->Project(Form("htests%d",j+4),varsToProjectTest[j].c_str(),"status2");
+		treeHisto->Project(Form("htests%d",j+7),varsToProjectTest[j].c_str(),"N2_status1");
+		treeHisto->Project(Form("htests%d",j+10),varsToProjectTest[j].c_str(),"N2_status2");
+
+		//chi2pid < (3,2,1) (status>=2110)
+		treeHisto->Project(Form("htestc%d",j+1),varsToProjectTest[j].c_str(),"chi2pid1");
+		treeHisto->Project(Form("htestc%d",j+4),varsToProjectTest[j].c_str(),"chi2pid2");
+		treeHisto->Project(Form("htestc%d",j+7),varsToProjectTest[j].c_str(),"chi2pid3");
+		treeHisto->Project(Form("htestc%d",j+10),varsToProjectTest[j].c_str(),"N2_chi2pid1");
+		treeHisto->Project(Form("htestc%d",j+13),varsToProjectTest[j].c_str(),"N2_chi2pid2");
+		treeHisto->Project(Form("htestc%d",j+16),varsToProjectTest[j].c_str(),"N2_chi2pid3");
+	}
+
 	TCanvas** cant = new TCanvas*[6];
 	for(int k=0; k<3; k++){
 		cant[k] = new TCanvas(Form("cant%d",k+1),Form("cant%d",k+1),1200,600);

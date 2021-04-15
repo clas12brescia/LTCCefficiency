@@ -195,12 +195,12 @@ public:
   int operator()(region_part_ptr Particle){
     bool cond0 = Particle->par()->getCharge() == 0;
     if (no_neutral && cond0) return 0;  
-    int abs_pid = abs(Particle->par()->getPid()); 
+  /*int abs_pid = abs(Particle->par()->getPid()); 
     bool cond1 = abs_pid == no_abs_pid1; if (cond1) return 0;    
     bool cond2 = abs_pid == no_abs_pid2; if (cond2) return 0;    
     bool cond3 = abs_pid == no_abs_pid3; if (cond3) return 0;    
-    bool cond4 = abs_pid > upper_abs_pid; if (cond4) return 0;    
-    int region = Particle->getRegion();
+  	bool cond4 = abs_pid > upper_abs_pid; if (cond4) return 0;    
+ */ int region = Particle->getRegion();
     if (region != requested_region) return 0; 
     int sector = Particle->getSector(); 
     if (!( (sector==sectorA) || (sector==sectorB) )) return 0;
@@ -237,6 +237,7 @@ int LTCCefficiency(){
 	
 	double candidate_P, candidate_theta, candidate_phi;
 	double candidate_X, candidate_Y, candidate_Z;
+  double X_che, Y_che;
 	double candidate_Nphe;
 	double missing_mass, candidate_charge;
 	double candidate_chi2pid;
@@ -246,6 +247,8 @@ int LTCCefficiency(){
 	treeHisto->Branch("X",&candidate_X,"X/D");
 	treeHisto->Branch("Y",&candidate_Y,"Y/D");
 	treeHisto->Branch("Z",&candidate_Z,"Z/D");
+  treeHisto->Branch("X_che", &X_che,"X_che/D");
+  treeHisto->Branch("Y_che",&Y_che,"Y_che/D");
 	treeHisto->Branch("Theta",&candidate_theta,"Theta/D");
 	treeHisto->Branch("Phi",&candidate_phi,"Phi/D");
 	treeHisto->Branch("nphe",&candidate_Nphe,"nphe/D");
@@ -352,6 +355,8 @@ int LTCCefficiency(){
 			candidate_X = (*candidate)->traj(LTCC,1)->getX();
 			candidate_Y = (*candidate)->traj(LTCC,1)->getY();
 			candidate_Z = (*candidate)->traj(LTCC,1)->getZ();
+      X_che = (*candidate)->che(LTCC)->getX();
+      Y_che = (*candidate)->che(LTCC)->getY();
 			candidate_theta = (*candidate)->getTheta();
 			candidate_phi = (*candidate)->getPhi();
 
