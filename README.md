@@ -27,7 +27,7 @@ The quantities of interest for this analysis are the following:
 * Missing mass (mm, GeV/c<sup>2</sup>).
 
 Cuts on kinetic variables are applied to obtain a clear missing mass peak and to select the events the most accurately possible.
-The events we are interested in are: e + p &rarr; &pi;<sup>+</sup> + n.
+The events we are interested in are: e + p &rarr; e + &pi;<sup>+</sup> + n.
 The cuts are applied after the creation of the TTree in the `makeHistos.cxx` macro and they are:
 
 * cut on missing mass (between 0.88 and 1 GeV), so that is near the neutron mass (~0.94 GeV);
@@ -36,15 +36,13 @@ The cuts are applied after the creation of the TTree in the `makeHistos.cxx` mac
 
 For details on the meaning of these two parameters, see [CLAS12 DSTs](https://clasweb.jlab.org/wiki/index.php/CLAS12_DSTs#REC::Particle).
 
-![](./fig/missing_mass_1-1.png)
-
 The candidated particles in this macro are identified **without** the use of PID. 
 Instead, they are selected using the following requests:
 
 1. events with no more than **one or two charged tracks** are selected;
-1. one of these tracks must be an **electron**;
-1. the electron must be in the **FD region** but **outside sectors 3 and 5**;
+1. one of these tracks must be an **electron** in the **FD region** but **outside sectors 3 and 5**;
 1. **only positive-charged particles** are admitted in the active region;
+
 
 The user can enable/disable the particle selection by PID. To do this, change the following lines in the code:
 
@@ -115,15 +113,7 @@ A total of 12 canvases are created, each one composed by 1D- or 2D-histograms wh
 1. The variable distribution for candidates with signal in LTCC (i.e. N<sub>phe</sub>>1 or 2 in sectors 3 and 5);
 1. The efficiency in sectors 3 and 5;
  
-These canvases are saved in a ROOT file and two pdf file named `out1D_input_filename.root/.pdf` and `out2D_input_filename.root/.pdf`.
-The six fundamental histograms for our analysis are the following:
-
-![](./fig/can0_P-1.png)
-![](./fig/can3_ThetaV-1.png)
-![](./fig/can4_PhiV-1.png)
-![](./fig/can2_0_XY-1.png)
-![](./fig/can2_2_ThetaVPhiV-1.png)
-![](./fig/can2_4_ThetaVP-1.png)
+These canvases are saved in a ROOT file `out_input_filename.root` and two pdf file named `out1D_input_filename.pdf` and `out2D_input_filename.pdf`.
 
 Two 3D-tables are also saved in two different files, one per sector, named `P_theta_phi_efficiency_s3.txt` and `P_theta_phi_efficiency_s5.txt`. 
 This tables contain the central values of the bins for P, &theta;, &phi; variables and the associated efficiency for these values.
