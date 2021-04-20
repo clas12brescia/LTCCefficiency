@@ -2,7 +2,8 @@
 
 /*
 This macro is made to draw and save histograms from a TTree.
-As default, the input will be the file named `LTCCefficiency_tree.root`.
+As default, the input will be the file named 
+`LTCCefficiency_tree_input_skim13_spring2019.root`.
 Use:
 root -l 'makeHistos.cxx("tree_filename.root")'
 if you named this file differently from the default value.
@@ -11,7 +12,7 @@ if you named this file differently from the default value.
 // Convert a TH2F in a polar histogram with the correct axes system
 //void SetToPolar(TH2F* h, TCanvas* c);
 
-void makeHistos(string treeFile="LTCCefficiency_tree.root"){
+void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.root"){
 	//read the TTree from root file created by LTCCefficiency.cxx
 	TFile *ftree = new TFile(treeFile.c_str());
 	TTree *treeHisto = (TTree*)ftree->Get("treeHisto");
