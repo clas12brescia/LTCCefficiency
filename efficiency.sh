@@ -27,7 +27,6 @@ if [[ -s $WORKING_DIR/$OUTPDF1 ]] && [[ -s $WORKING_DIR/$OUTPDF2 ]] && [[ -s $WO
 			exit 0
 		elif [[ $CONTINUE = 'Y' ]]; then
 			echo "The script will be executed...";
-			continue
 		fi
 	elif [[ $REMOVE = 'Y' ]]; then
 		rm $OUTPDF1
@@ -35,7 +34,6 @@ if [[ -s $WORKING_DIR/$OUTPDF1 ]] && [[ -s $WORKING_DIR/$OUTPDF2 ]] && [[ -s $WO
 		rm $OUTROOT
 		echo "The files were correctly removed.";
 		echo "The script will be now executed...";
-		continue
 	fi
 fi
 
@@ -49,6 +47,7 @@ elif ! [[ -e $WORKING_DIR/$TREE ]] && [[ -s $WORKING_DIR/$FILE.dat ]]; then
 	echo "Creating the TTree from hipo files of list" $FILE".dat.";
 	echo "The operation will require some minutes...";
 	time clas12root -b -q LTCCefficiency.cxx --in=$FILE.dat
+	echo $TREE "will be now used to produce the histograms.";
 	root -l -q 'makeHistos.cxx("'$TREE'")'
 else
 	echo "Please, insert a valid list of hipo file (Format: .dat).";
