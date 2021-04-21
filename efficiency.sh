@@ -41,8 +41,17 @@ fi
 # depending on the presence of already existing TTree file.
 if [[ -e $WORKING_DIR/$TREE ]]; then              
 	echo "The TTree relative to this list is already present.";
-	echo $TREE "will be used to produce the histograms.";
-	root -l -q 'makeHistos.cxx("'$TREE'")' 
+	echo -e "Do you want to use "$TREE" to produce the histograms? (Y/n): \c";
+	read USEIT
+	if [[ $USEIT = 'n' ]]; then
+		echo "The TTree "$TREE" will be overwritten...";
+		time clas12root -b -q LTCCefficiency.cxx --in=$FILE.dat
+		echo $TREE "will be now used to produce the histograms.";
+		root -l -q 'makeHistos.cxx("'$TREE'")'
+	elif [[ $USEIT = 'Y' ]]; then
+		echo "The TTree "$TREE" will be used to produce the histograms.";
+		root -l -q 'makeHistos.cxx("'$TREE'")'
+	fi 
 elif ! [[ -e $WORKING_DIR/$TREE ]] && [[ -s $WORKING_DIR/$FILE.dat ]]; then
 	echo "Creating the TTree from hipo files of list" $FILE".dat.";
 	echo "The operation will require some minutes...";
