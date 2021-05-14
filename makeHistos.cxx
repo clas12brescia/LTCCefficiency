@@ -26,6 +26,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 	TH2F * hsel2D[12];
 	TH3F * htot3D[2];
 	TH3F * hsel3D[2];
+	TProfile2D* hprof2D[6];
 	//min and max of ranges for variables:
 	// P, theta, phi, Theta, Phi, costheta
 	double infS3[6]={2.5,5,-90,3,80,0.8};
@@ -40,6 +41,11 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 	double max2S3[6][2]={{0,350},{35,-30},{33,160},{1,-30},{9.5,33},{0,350}};
 	double inf2S5[6][2]={{-300,-350},{5,30},{3,-160},{0.8,30},{2.5,3},{-300,-350}};
 	double max2S5[6][2]={{0,-50},{35,90},{33,-80},{1,90},{9.5,33},{0,-50}};
+	// (x,y), (x_che,y_che), (Theta, Phi) -> 2D-profile
+	double infpS3[3][2]={{-300,50},{-300,50},{3,80}};
+	double maxpS3[3][2]={{0,350},{0,350},{33,160}};
+	double infpS5[3][2]={{-300,-350},{-300,-350},{3,-160}};
+	double maxpS5[3][2]={{0,-50},{0,-50},{33,-80}};
 //	double inf2[6][2]={{-350,-350},{5,-180},{3,-200},{0.8,-180},{2.5,3},{-350,-350}};
 //	double max2[6][2]={{350,350},{35,180},{33,200},{1,180},{9.5,33},{350,350}};
 	//customize the binning of the histograms
@@ -47,6 +53,8 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 	int bins[6]={56,60,80,60,80,80};
 	// (x,y), (theta, phi), (Theta, Phi), (costheta, phi), (P, theta)
 	int bins2[6][2]={{150,150},{120,120},{120,120},{120,180},{56,90},{150,150}};
+	// (x,y), (x_che, y_che), (Theta,Phi) -> 2D-profile
+	int binsp[3][2]={{150,150},{150,150},{120,120}};
 	
 	// set useful aliases for histograms
 	treeHisto->SetAlias("R","sqrt(X*X+Y*Y+Z*Z)");
@@ -59,6 +67,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 	string var[6]={"P(GeV/c)","#theta(deg)","#phi(deg)","#theta(deg)","#phi(deg)","cos(#theta)(#)"};
 	string varsToProject[6] = {"P", "theta", "phi", "ThetaV", "PhiV", "costheta"};
 	string pair[6][2]={{"Y:X","x(cm); y(cm)"},{"phi:theta","#theta(deg); #phi(deg)"},{"PhiV:ThetaV","#theta(deg); #phi(deg)"},{"phi:costheta","cos#theta; #phi(deg)"},{"ThetaV:P","P(GeV/c); #theta(deg)"},{"Y_che:X_che","x_{che}(cm); y_{che}(cm)"}};
+	string profile[3][2]={{"nphe:Y:X","x(cm); y(cm); N_{phe}"},{"nphe:Y_che:X_che","x_{che}(cm); y_{che}(cm); N_{phe}"},{"nphe:PhiV:ThetaV","#theta(deg); #phi(deg); N_{phe}"}};
 	
 	//create histograms arrays with ranges and title defined before
 	for(int j=0; j<6; j++){
@@ -80,6 +89,13 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 	hsel3D[0] = new TH3F("hs3D1","Candidate hits in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",56,2.5,9.5,15,3,33,40,80,160);
 	htot3D[1] = new TH3F("ht3D2","Candidates in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",56,2.5,9.5,15,3,33,40,-160,-80);
 	hsel3D[1] = new TH3F("hs3D2","Candidate hits in LTCC [P:theta:phi]; P(GeV/c); #theta(deg); #phi(deg)",56,2.5,9.5,15,3,33,40,-160,-80);
+
+	// create 2D-profile histograms
+	for(int k=0; k<3; k++)
+	{
+		hprof2D[k] = new TProfile2D(Form("hp2D%d",k+1),Form("Average N_{phe} in sector 3 [%s]; %s",profile[k][0].c_str(),profile[k][1].c_str()),binsp[k][0],infpS3[k][0],maxpS3[k][0],binsp[k][1],infpS3[k][1],maxpS3[k][1]);
+		hprof2D[k+3] = new TProfile2D(Form("hp2D%d",k+4),Form("Average N_{phe} in sector 5 [%s]; %s",profile[k][0].c_str(),profile[k][1].c_str()),binsp[k][0],infpS5[k][0],maxpS5[k][0],binsp[k][1],infpS5[k][1],maxpS5[k][1]);
+	}
 	
 	// set aliases for histograms' conditions
 	// sector 3
@@ -119,6 +135,13 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 	// sector 5
 	treeHisto->Project("ht3D2","PhiV:ThetaV:P","S5");
 	treeHisto->Project("hs3D2","PhiV:ThetaV:P","S5N2");
+
+	// Projection of 2D-profile histograms
+	for(int k=0; k<3; k++)
+	{
+		treeHisto->Project(Form("hp2D%d",k+1), profile[k][0].c_str(), "S3N2");
+		treeHisto->Project(Form("hp2D%d",k+4), profile[k][0].c_str(), "S5N2");
+	}
 
 	//define histograms arrays for efficiency (ratio total/selected)
 	TH1F * hrt[24];
@@ -267,6 +290,24 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 
 	}
 
+	// 2D-profile histograms
+	TCanvas** canp = new TCanvas*[3];
+	for(int k=0; k<3; k++)
+	{
+		canp[k] = new TCanvas(Form("canp%d",k+1),Form("canp%d",k+1),800,400);
+		canp[k]->Divide(2,1);
+		canp[k]->cd(1);
+		//hprof2D[k]->ShowPeaks();
+		gPad->SetLogz();
+		hprof2D[k]->Draw("COLZ");
+		canp[k]->cd(2);
+		//hprof2D[k+3]->ShowPeaks();
+		gPad->SetLogz();
+		hprof2D[k+3]->Draw("COLZ");
+
+		canp[k]->Write();
+	}
+
 	//
 	TCanvas* can_che = new TCanvas("can_che","can_che",800,400);
 	can_che->Divide(2,1);
@@ -314,14 +355,17 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 	can[2]->SaveAs(Form("out1D_%s.pdf",output.c_str()));
 	can[3]->SaveAs(Form("out1D_%s.pdf",output.c_str()));
 	can[4]->SaveAs(Form("out1D_%s.pdf",output.c_str()));
-	can[5]->SaveAs(Form("out1D_%s.pdf)",output.c_str()));
-	can[6]->SaveAs(Form("out2D_%s.pdf(",output.c_str()));
+	can[5]->SaveAs(Form("out1D_%s.pdf)",output.c_str()));// <-- last page
+	can[6]->SaveAs(Form("out2D_%s.pdf(",output.c_str()));// <-- first page
 	can[7]->SaveAs(Form("out2D_%s.pdf",output.c_str()));
 	can[8]->SaveAs(Form("out2D_%s.pdf",output.c_str()));
 	can[9]->SaveAs(Form("out2D_%s.pdf",output.c_str()));
 	can[10]->SaveAs(Form("out2D_%s.pdf",output.c_str()));
 	can[11]->SaveAs(Form("out2D_%s.pdf",output.c_str())); 
-	can_che->SaveAs(Form("out2D_%s.pdf)",output.c_str())); // <-- last page
+	can_che->SaveAs(Form("out2D_%s.pdf",output.c_str())); 
+	canp[0]->SaveAs(Form("out2D_%s.pdf",output.c_str())); 
+	canp[1]->SaveAs(Form("out2D_%s.pdf",output.c_str()));
+	canp[2]->SaveAs(Form("out2D_%s.pdf)",output.c_str())); // <-- last page
 
 	out->Close();
 	s3out.close();
