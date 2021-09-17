@@ -26,7 +26,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 	TH2F * hsel2D[12];
 	TH3F * htot3D[2];
 	TH3F * hsel3D[2];
-	TProfile2D* hprof2D[6];
+	TProfile2D* hprof2D[12];
 	//min and max of ranges for variables:
 	// P, theta, phi, Theta, Phi, costheta
 	double infS3[6]={2.5,5,-90,3,80,0.8};
@@ -67,7 +67,7 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 	string var[6]={"P(GeV/c)","#theta(deg)","#phi(deg)","#theta(deg)","#phi(deg)","cos(#theta)(#)"};
 	string varsToProject[6] = {"P", "theta", "phi", "ThetaV", "PhiV", "costheta"};
 	string pair[6][2]={{"Y:X","x(cm); y(cm)"},{"phi:theta","#theta(deg); #phi(deg)"},{"PhiV:ThetaV","#theta(deg); #phi(deg)"},{"phi:costheta","cos#theta; #phi(deg)"},{"ThetaV:P","P(GeV/c); #theta(deg)"},{"Y_che:X_che","x_{che}(cm); y_{che}(cm)"}};
-	string profile[3][2]={{"nphe:Y:X","x(cm); y(cm); N_{phe}"},{"nphe:Y_che:X_che","x_{che}(cm); y_{che}(cm); N_{phe}"},{"nphe:PhiV:ThetaV","#theta(deg); #phi(deg); N_{phe}"}};
+	string profile[3][2]={{"nphe:Y:X","x(cm); y(cm)"},{"nphe:Y_che:X_che","x_{che}(cm); y_{che}(cm)"},{"nphe:PhiV:ThetaV","#theta(deg); #phi(deg)"}};
 	
 	//create histograms arrays with ranges and title defined before
 	for(int j=0; j<6; j++){
@@ -93,11 +93,14 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 	// create 2D-profile histograms
 	for(int k=0; k<3; k++)
 	{
-		hprof2D[k] = new TProfile2D(Form("hp2D%d",k+1),Form("Average N_{phe} in sector 3 [%s]; %s",profile[k][0].c_str(),profile[k][1].c_str()),binsp[k][0],infpS3[k][0],maxpS3[k][0],binsp[k][1],infpS3[k][1],maxpS3[k][1]);
-		hprof2D[k+3] = new TProfile2D(Form("hp2D%d",k+4),Form("Average N_{phe} in sector 5 [%s]; %s",profile[k][0].c_str(),profile[k][1].c_str()),binsp[k][0],infpS5[k][0],maxpS5[k][0],binsp[k][1],infpS5[k][1],maxpS5[k][1]);
+		hprof2D[k] = new TProfile2D(Form("hp2D%d",k+1),Form("Average N_{phe} in sector 3 (n_{phe}>2) [%s]; %s",profile[k][0].c_str(),profile[k][1].c_str()),binsp[k][0],infpS3[k][0],maxpS3[k][0],binsp[k][1],infpS3[k][1],maxpS3[k][1]);
+		hprof2D[k+3] = new TProfile2D(Form("hp2D%d",k+4),Form("Average N_{phe} in sector 5 (n_{phe}>2) [%s]; %s",profile[k][0].c_str(),profile[k][1].c_str()),binsp[k][0],infpS5[k][0],maxpS5[k][0],binsp[k][1],infpS5[k][1],maxpS5[k][1]);
+		hprof2D[k+6] = new TProfile2D(Form("hp2D%d",k+7),Form("Average N_{phe} in sector 3 [%s]; %s",profile[k][0].c_str(),profile[k][1].c_str()),binsp[k][0],infpS3[k][0],maxpS3[k][0],binsp[k][1],infpS3[k][1],maxpS3[k][1]);
+		hprof2D[k+9] = new TProfile2D(Form("hp2D%d",k+10),Form("Average N_{phe} in sector 5 [%s]; %s",profile[k][0].c_str(),profile[k][1].c_str()),binsp[k][0],infpS5[k][0],maxpS5[k][0],binsp[k][1],infpS5[k][1],maxpS5[k][1]);
 	}
 	
 	// set aliases for histograms' conditions
+	
 	// sector 3
 	treeHisto->SetAlias("S3","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && Y>0 && charge==1");							//sector 3
 	treeHisto->SetAlias("S3N1","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && Y>0 && nphe>1 && charge==1");	//sector 3, 1 nphe
@@ -106,7 +109,17 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 	treeHisto->SetAlias("S5","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && Y<0 && charge==1");							//sector 5
 	treeHisto->SetAlias("S5N1","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && Y<0 && nphe>1 && charge==1");	//sector 5, 1 nphe
 	treeHisto->SetAlias("S5N2","mm>0.88 && mm<1 && abs(chi2pid)<3 && status>2109 && Y<0 && nphe>2 && charge==1");	//sector 5, 2 nphe
-
+	/*
+	//For electrons
+	// sector 3
+	treeHisto->SetAlias("S3","mm>0.88 && mm<1 && abs(chi2pid)<3 && Y>0 && charge==-1");							//sector 3
+	treeHisto->SetAlias("S3N1","mm>0.88 && mm<1 && abs(chi2pid)<3 && Y>0 && nphe>1 && charge==-1");	//sector 3, 1 nphe
+	treeHisto->SetAlias("S3N2","mm>0.88 && mm<1 && abs(chi2pid)<3 && Y>0 && nphe>2 && charge==-1");	//sector 3, 2 nphe
+	// sector 5
+	treeHisto->SetAlias("S5","mm>0.88 && mm<1 && abs(chi2pid)<3 && Y<0 && charge==-1");							//sector 5
+	treeHisto->SetAlias("S5N1","mm>0.88 && mm<1 && abs(chi2pid)<3 && Y<0 && nphe>1 && charge==-1");	//sector 5, 1 nphe
+	treeHisto->SetAlias("S5N2","mm>0.88 && mm<1 && abs(chi2pid)<3 && Y<0 && nphe>2 && charge==-1");	//sector 5, 2 nphe
+	*/
 	//fill the histograms arrays with the tree branches
 	for(int j=0; j<6; j++){
 		//1D
@@ -141,6 +154,8 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 	{
 		treeHisto->Project(Form("hp2D%d",k+1), profile[k][0].c_str(), "S3N2");
 		treeHisto->Project(Form("hp2D%d",k+4), profile[k][0].c_str(), "S5N2");
+		treeHisto->Project(Form("hp2D%d",k+7), profile[k][0].c_str(), "S3");
+		treeHisto->Project(Form("hp2D%d",k+10), profile[k][0].c_str(), "S5");
 	}
 
 	//define histograms arrays for efficiency (ratio total/selected)
@@ -294,8 +309,8 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 	TCanvas** canp = new TCanvas*[3];
 	for(int k=0; k<3; k++)
 	{
-		canp[k] = new TCanvas(Form("canp%d",k+1),Form("canp%d",k+1),800,400);
-		canp[k]->Divide(2,1);
+		canp[k] = new TCanvas(Form("canp%d",k+1),Form("canp%d",k+1),800,800);
+		canp[k]->Divide(2,2);
 		canp[k]->cd(1);
 		//hprof2D[k]->ShowPeaks();
 		gPad->SetLogz();
@@ -304,6 +319,14 @@ void makeHistos(string treeFile="LTCCefficiency_tree_input_skim13_spring2019.roo
 		//hprof2D[k+3]->ShowPeaks();
 		gPad->SetLogz();
 		hprof2D[k+3]->Draw("COLZ");
+		canp[k]->cd(3);
+		//hprof2D[k+6]->ShowPeaks();
+		gPad->SetLogz();
+		hprof2D[k+6]->Draw("COLZ");
+		canp[k]->cd(4);
+		//hprof2D[k+9]->ShowPeaks();
+		gPad->SetLogz();
+		hprof2D[k+9]->Draw("COLZ");
 
 		canp[k]->Write();
 	}
