@@ -1,25 +1,30 @@
 # Clas12root installation
 
-#### Valerio, Dec. 16 2020
-
 Before, read the instructions on the official repo https://github.com/JeffersonLab/clas12root.
 
-Then, this works for me (copied from the install script in the repo but removing the first 2 lines about hipo files copying)
+This set of instructions worked for me on Jan 2022. 
 
 ``` bash
+# Download clas12root source
 git clone --recurse-submodules https://github.com/jeffersonlab/clas12root.git
+# Clone the clasqaDB as well and set the QADB enviroment variable
+git clone --recurse-submodules https://github.com/JeffersonLab/clasqaDB.git
+
 cd clas12root/
 export CLAS12ROOT=$PWD
 export PATH="$PATH":"$CLAS12ROOT/bin"
 export HIPO=$CLAS12ROOT/hipo4
+export QADB=/home/valerio/CLAS_SOFTWARE/clasqaDB
+
 mkdir build
 cd build
 cmake ../
-make
-cmake ../
+# change 8 to the cores of your CPU
+make -j8
 make install
 ```
-Then set the CLAS12ROOT, PATH and HIPO env variables in the `.bashrc` file!
+
+Optiona: set the CLAS12ROOT, PATH, HIPO and QADB env variables in the `.bashrc` file!
 
 
 ## Examples
